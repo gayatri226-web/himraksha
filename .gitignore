@@ -1,0 +1,12 @@
+# data + secrets never go to git
+models/*.onnx
+models/*.pth
+run_*/
+*.tif
+*.zip
+*.parquet
+_tiles/
+.env
+*.key
+__pycache__/
+.ipynb_checkpoints/

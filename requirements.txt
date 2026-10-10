@@ -1,0 +1,15 @@
+openeo
+rasterio
+pysheds
+onnxruntime
+numpy
+scipy
+pandas
+geopandas
+shapely
+pyproj
+pyogrio
+pyarrow
+networkx
+requests
+matplotlib
