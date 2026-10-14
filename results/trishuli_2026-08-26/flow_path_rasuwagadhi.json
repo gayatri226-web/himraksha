@@ -1,0 +1,19 @@
+{
+  "start_lonlat": [
+    85.383,
+    28.276
+  ],
+  "snapped_to_channel_m": 598,
+  "path_length_km": 72.01,
+  "elevation_start_m": 1769,
+  "elevation_end_m": 432,
+  "ends_at_area_edge": false,
+  "settlements_in_corridor": 9,
+  "settlements_high_exposure": 7,
+  "buildings_in_corridor": 1991,
+  "buildings_at_most_10m_above_channel": 516,
+  "corridor_rule": "<= 1000 m from the channel and <= 30 m above it; high exposure = buildings <= 10 m above it",
+  "data": "Copernicus DEM GLO-30 (D8 flow, pysheds) + pre-event OpenStreetMap settlements",
+  "path_km_inside_mapped_valley": 57.58,
+  "path_pct_with_detected_impact_within_100m": 73.4
+}

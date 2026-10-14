@@ -1,0 +1,203 @@
+{
+  "bbox": [
+    79.5,
+    30.4,
+    79.8,
+    30.6
+  ],
+  "event": "2021-02-07",
+  "orbits": [
+    {
+      "orbit": 56,
+      "direction": "ASCENDING",
+      "pre": "2021-01-29",
+      "post": "2021-02-10",
+      "gap_days": 12,
+      "days_after_event": 3,
+      "aoi_coverage": 1.0,
+      "file": "run_20210207_79.50_30.40_79.80_30.60/s1_orbit56_ascending.tif",
+      "thresholds_db": {
+        "VV": 2.64,
+        "VH": 2.91
+      }
+    },
+    {
+      "orbit": 63,
+      "direction": "DESCENDING",
+      "pre": "2021-01-30",
+      "post": "2021-02-11",
+      "gap_days": 12,
+      "days_after_event": 4,
+      "aoi_coverage": 1.0,
+      "file": "run_20210207_79.50_30.40_79.80_30.60/s1_orbit63_descending.tif",
+      "thresholds_db": {
+        "VV": 2.49,
+        "VH": 3.08
+      }
+    }
+  ],
+  "sources": [
+    "Sentinel-1 IW GRDH (Copernicus Data Space), processed from raw by grd_preprocess.py",
+    "Copernicus DEM GLO-30",
+    "Sentinel-2 L2A (Copernicus Data Space), clear-sky pixels only (SCL)"
+  ],
+  "stats": {
+    "new_water_km2": 0.072,
+    "debris_darkened_km2": 0.771,
+    "debris_brightened_km2": 0.337,
+    "total_impacted_km2": 1.18,
+    "conf_high_km2": 0.2,
+    "conf_medium_single_view_km2": 0.0,
+    "conf_low_disagree_km2": 0.98,
+    "valley_floor_km2": 24.964,
+    "valley_seen_by_2plus_orbits_km2": 24.877,
+    "valley_seen_by_1_orbit_km2": 0.088,
+    "valley_unobserved_km2": 0.0,
+    "valley_visible_orbit56_pct": 99.688,
+    "valley_visible_orbit63_pct": 99.961
+  },
+  "params": {
+    "hand_max_m": 50,
+    "slope_max_deg": 30,
+    "k_sigma": 2.5,
+    "min_db": 2.0,
+    "min_blob_ha": 0.5
+  },
+  "s2": {
+    "pre": [
+      {
+        "date": "2021-01-31",
+        "tile_cloud_pct": 0.0,
+        "products": [
+          "S2B_MSIL2A_20210131T052039_N0500_R062_T44RLU_20230610T095635.SAFE"
+        ],
+        "clear_pct_of_area": 70.1,
+        "valley_clear_after_this_date_pct": 70.0
+      },
+      {
+        "date": "2021-01-26",
+        "tile_cloud_pct": 0.0,
+        "products": [
+          "S2A_MSIL2A_20210126T052111_N0500_R062_T44RLU_20230528T111808.SAFE"
+        ],
+        "clear_pct_of_area": 69.2,
+        "valley_clear_after_this_date_pct": 71.9
+      },
+      {
+        "date": "2021-01-21",
+        "tile_cloud_pct": 0.0,
+        "products": [
+          "S2B_MSIL2A_20210121T052119_N0500_R062_T44RLU_20230522T215246.SAFE"
+        ],
+        "clear_pct_of_area": 68.8,
+        "valley_clear_after_this_date_pct": 72.7
+      },
+      {
+        "date": "2021-01-16",
+        "tile_cloud_pct": 0.0,
+        "products": [
+          "S2A_MSIL2A_20210116T052151_N0500_R062_T44RLU_20230611T082632.SAFE"
+        ],
+        "clear_pct_of_area": 67.0,
+        "valley_clear_after_this_date_pct": 73.2
+      }
+    ],
+    "post": [
+      {
+        "date": "2021-02-20",
+        "tile_cloud_pct": 0.2,
+        "products": [
+          "S2B_MSIL2A_20210220T051839_N0500_R062_T44RLU_20230608T052411.SAFE"
+        ],
+        "clear_pct_of_area": 79.3,
+        "valley_clear_after_this_date_pct": 85.9
+      },
+      {
+        "date": "2021-02-25",
+        "tile_cloud_pct": 0.2,
+        "products": [
+          "S2A_MSIL2A_20210225T051801_N0500_R062_T44RLU_20230603T122455.SAFE"
+        ],
+        "clear_pct_of_area": 73.1,
+        "valley_clear_after_this_date_pct": 89.1
+      },
+      {
+        "date": "2021-03-02",
+        "tile_cloud_pct": 0.0,
+        "products": [
+          "S2B_MSIL2A_20210302T051729_N0500_R062_T44RLU_20230607T115219.SAFE"
+        ],
+        "clear_pct_of_area": 74.6,
+        "valley_clear_after_this_date_pct": 90.9
+      }
+    ],
+    "used": true,
+    "valley_clear_both_dates_pct": 72.7,
+    "s2_debris_km2": 0.504,
+    "s2_new_water_km2": 0.07,
+    "radar_and_optical_agree_km2": 0.211,
+    "optical_only_added_km2": 0.362,
+    "radar_only_km2": 0.969,
+    "radar_only_where_optical_clear_km2": 0.709,
+    "total_impacted_km2": 1.542,
+    "conf_high_km2": 0.355,
+    "thresholds": {
+      "water": "MNDWI>0.0 & NDVI<0.1",
+      "vegetation_loss": "NDVI drop>0.25 & NDVI after<0.3",
+      "channel_filled": "water before -> NDVI after<0.2"
+    }
+  },
+  "damage": {
+    "osm_snapshot": "2021-02-06",
+    "buildings_total": 219,
+    "buildings_likely_hit": 1,
+    "buildings_hit_high_conf": 1,
+    "road_km_total": 155.0,
+    "road_km_likely_affected": 1.43,
+    "road_segments_likely_affected": 13,
+    "footpath_segments_likely_affected": 0,
+    "bridges_total": 15,
+    "bridges_likely_damaged": 1,
+    "bridges_likely_damaged_high_conf": 1,
+    "bridges_possibly_damaged": 2,
+    "bridges_likely_damaged_by_use": {
+      "vehicle": 1
+    },
+    "road_km_affected_by_class": {
+      "track": 0.71,
+      "service": 0.4,
+      "tertiary": 0.3,
+      "unclassified": 0.02
+    }
+  },
+  "access": {
+    "settlements": 66,
+    "scenarios": {
+      "all_detections": {
+        "no road within 500 m": 35,
+        "unaffected": 26,
+        "cut off": 4,
+        "long detour": 1
+      },
+      "confident_only": {
+        "no road within 500 m": 35,
+        "unaffected": 29,
+        "cut off": 1,
+        "long detour": 1
+      }
+    },
+    "destinations": {
+      "health_facilities": 5,
+      "towns": 1,
+      "roads_leaving_area_used_as_destination": false
+    },
+    "road_out_of_area": {
+      "no road": 35,
+      "lost": 16,
+      "yes": 15
+    },
+    "cut_off_but_reachable_on_foot": 0,
+    "buildings_near_cut_off_settlements": 1,
+    "repair_items_that_reconnect_someone": 1
+  }
+}

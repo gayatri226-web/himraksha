@@ -1,0 +1,10 @@
+{
+"type": "FeatureCollection",
+"name": "bridges_hit",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "@osmId": "449772503", "highway": "tertiary", "bridge": "yes", "kind": "vehicle", "status": "possibly damaged", "confidence": "low", "deck_impact_pct": 0.0, "debris_px_end_a": 0, "debris_px_end_b": 0 }, "geometry": { "type": "LineString", "coordinates": [ [ 79.5022787, 30.5253327 ], [ 79.5023028, 30.5262065 ] ] } },
+{ "type": "Feature", "properties": { "@osmId": "227466387", "highway": "tertiary", "bridge": "yes", "kind": "vehicle", "status": "possibly damaged", "confidence": "low", "deck_impact_pct": 4.5, "debris_px_end_a": 0, "debris_px_end_b": 6 }, "geometry": { "type": "LineString", "coordinates": [ [ 79.6945013, 30.4857167 ], [ 79.6937975, 30.4851788 ] ] } },
+{ "type": "Feature", "properties": { "@osmId": "683265976", "highway": "service", "bridge": "yes", "kind": "vehicle", "status": "likely damaged", "confidence": "high", "deck_impact_pct": 100.0, "debris_px_end_a": 41, "debris_px_end_b": 39 }, "geometry": { "type": "LineString", "coordinates": [ [ 79.6289223, 30.49339 ], [ 79.6291637, 30.4931381 ] ] } }
+]
+}

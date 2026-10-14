@@ -1,0 +1,30 @@
+{
+  "settlements": 66,
+  "scenarios": {
+    "all_detections": {
+      "no road within 500 m": 35,
+      "unaffected": 26,
+      "cut off": 4,
+      "long detour": 1
+    },
+    "confident_only": {
+      "no road within 500 m": 35,
+      "unaffected": 29,
+      "cut off": 1,
+      "long detour": 1
+    }
+  },
+  "destinations": {
+    "health_facilities": 5,
+    "towns": 1,
+    "roads_leaving_area_used_as_destination": false
+  },
+  "road_out_of_area": {
+    "no road": 35,
+    "lost": 16,
+    "yes": 15
+  },
+  "cut_off_but_reachable_on_foot": 0,
+  "buildings_near_cut_off_settlements": 1,
+  "repair_items_that_reconnect_someone": 1
+}

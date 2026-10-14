@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HimRaksha situation report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;background:#E9E3F2;color:#1B1530;font-family:'IBM Plex Sans',system-ui,sans-serif}
+.bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;padding:14px}
+.bar button,.bar a{font:600 14px 'IBM Plex Sans',sans-serif;min-height:44px;padding:8px 16px;border:2px solid #1B1530;border-radius:10px;background:#fff;color:#1B1530;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center}
+.bar .acc{background:#7C3AED;color:#fff;box-shadow:3px 3px 0 #1B1530}
+.page{width:210mm;min-height:297mm;margin:0 auto 24px;background:#fff;padding:11mm 12mm;display:flex;flex-direction:column;gap:3.4mm;font-size:9.6pt;box-shadow:0 2px 14px rgba(27,21,48,.18)}
+.h{font-family:'Space Grotesk',sans-serif;font-weight:700}
+.mono{font-family:'IBM Plex Mono',monospace}
+.lbl{font-size:8pt;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#4A3F63}
+.muted{color:#4A3F63}
+.k{border:1.4px solid #1B1530;border-radius:7px;padding:5px 7px}
+.kv{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17pt;line-height:1.1}
+.ks{font-size:7.8pt;color:#4A3F63}
+table{border-collapse:collapse;width:100%;font-size:8.8pt}
+td,th{padding:2.5px 4px;border-bottom:1px solid #DDD3EC;text-align:left;vertical-align:top}
+th{font-size:7.6pt;text-transform:uppercase;letter-spacing:.05em;color:#4A3F63}
+.num{font-family:'IBM Plex Mono',monospace;text-align:right;white-space:nowrap}
+ol{margin:0;padding-left:16px} li{margin-bottom:3px}
+.box{border:1.4px solid #1B1530;border-radius:7px;padding:6px 9px}
+.mapwrap{width:82mm;flex:none}
+.mapin{position:relative}
+.mapin img{display:block;width:100%;border-radius:5px}
+.mapin svg{position:absolute;inset:0;width:100%;height:100%}
+@media print{ html,body{background:#fff} .bar{display:none} .page{box-shadow:none;margin:0} }
+@media (max-width:820px){ .page{width:auto;min-height:0;margin:0 8px 20px;padding:16px} .cols{flex-direction:column} .mapwrap{width:100%} .k5{grid-template-columns:repeat(2,1fr)!important} }
+</style>
+</head>
+<body>
+<div class="bar"><button class="acc" type="button" onclick="window.print()">Print / save as PDF</button><a id="back" href="index.html">← Dashboard</a></div>
+<article class="page" id="page" aria-live="polite">Loading…</article>
+<script src="data/events.js"></script>
+<script>
+(function () {
+  var EV = window.HR_EVENTS || [], id = (location.search.match(/e=([\w-]+)/) || [])[1] || (EV[0] && EV[0].id);
+  var esc = function (s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var fmt = function (n, d) { if (n === null || n === undefined || isNaN(n)) return '—'; return Number(n).toLocaleString('en-US', { minimumFractionDigits: d || 0, maximumFractionDigits: d || 0 }); };
+  document.getElementById('back').href = 'index.html#e=' + id;
+  var sc = document.createElement('script'); sc.src = 'data/' + id + '/data.js'; sc.onload = render;
+  sc.onerror = function () { document.getElementById('page').textContent = 'No exported run "' + id + '".'; };
+  document.body.appendChild(sc);
+  function render() {
+    var d = window.HR_DATA[id], k = d.kpi, o = d.orbits, s2 = d.s2;
+    document.title = 'HimRaksha situation report — ' + d.name;
+    var radar = o.map(function (x) { return x.post; }).sort().join(' + ');
+    var opt = s2 && s2.used ? 'Optical ' + d.s2_dates.post.slice().sort()[0] + ' … ' + d.s2_dates.post.slice().sort().slice(-1)[0] : 'Optical: none clear';
+    var poly = d.impact.map(function (f) {
+      var col = f.g === 'optical' ? '#E5A800' : (f.g === 'water' ? (f.c === 'low' ? '#7EA6F0' : '#1D4FC4') : (f.c === 'low' ? '#C9874E' : '#6B2F0C'));
+      return '<path d="' + f.p.map(function (part) { return part.map(function (r) { return 'M' + r.map(function (q) { return q[0] + ' ' + q[1]; }).join('L') + 'Z'; }).join(''); }).join('') + '" fill="' + col + '" stroke="' + col + '" stroke-width="1.5"/>';
+    }).join('');
+    var hit = d.roads_hit.map(function (r) { return '<path d="' + r.p.map(function (l) { return 'M' + l.map(function (q) { return q[0] + ' ' + q[1]; }).join('L'); }).join('') + '" fill="none" stroke="#E0157A" stroke-width="4"/>'; }).join('');
+    var marks = d.settlements.map(function (s) {
+      if (s.s === 'cut') return '<rect x="' + (s.x - 11) + '" y="' + (s.y - 11) + '" width="22" height="22" transform="rotate(45 ' + s.x + ' ' + s.y + ')" fill="#C8102E" stroke="#fff" stroke-width="2.5"/>';
+      if (s.s === 'detour') return '<path d="M' + s.x + ' ' + (s.y - 14) + 'L' + (s.x + 13) + ' ' + (s.y + 10) + 'L' + (s.x - 13) + ' ' + (s.y + 10) + 'Z" fill="#E07B00" stroke="#fff" stroke-width="2"/>';
+      return '';
+    }).join('') + d.health.map(function (h) { return '<path d="M' + (h.x - 5) + ' ' + (h.y - 15) + 'h10v10h10v10h-10v10h-10v-10h-10v-10h10z" fill="#1D4FC4" stroke="#fff" stroke-width="1.5"/>'; }).join('') +
+      d.repairs.map(function (r) { return '<circle cx="' + r.x + '" cy="' + r.y + '" r="20" fill="#1B1530" stroke="#FFD84D" stroke-width="4"/><text x="' + r.x + '" y="' + (r.y + 8) + '" text-anchor="middle" font-size="23" font-weight="700" fill="#fff" font-family="IBM Plex Mono,monospace">' + r.rank + '</text>'; }).join('');
+    var top = d.settlements.filter(function (s) { return s.s === 'cut' || s.s === 'detour'; }).sort(function (a, b) { return b.b - a.b; }).slice(0, 8);
+    var named = d.bridges.filter(function (b) { return b.s === 'likely damaged' && b.n; }).map(function (b) { return b.n + (b.k === 'foot' ? ' (foot)' : ''); });
+    var unnamed = d.bridges.filter(function (b) { return b.s === 'likely damaged' && !b.n; }).length;
+    var v = d.validation;
+    var sure = v ? 'Checked against ' + esc(v.ref.split('(')[0]) + ': ' + fmt(v.rows[0][1] * 100) + '% of flagged area and ' + fmt(v.rows[2][1] * 100) + '% of flagged buildings are confirmed; we find ' + fmt(v.rows[2][2] * 100) + '% of damaged buildings and ' + fmt(v.rows[3][2] * 100) + '% of damaged roads.'
+                 : 'No official grading map for this area yet; detections were checked against the Sentinel-2 before/after images.';
+    sure += ' High confidence = both radar orbits, or radar and optical, agree (' + fmt(k.area_hi, 2) + ' of ' + fmt(k.area, 2) + ' km²).';
+    document.getElementById('page').innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:10px;border-bottom:3px solid #1B1530;padding-bottom:6px">' +
+      '<div><div class="lbl">HimRaksha · Situation report · generated by the system</div><div class="h" style="font-size:18pt;line-height:1.1">' + esc(d.name) + '</div>' +
+      '<div class="muted">' + esc(d.kind) + ' · event ' + esc(d.event) + ' · area ' + d.bbox.map(function (x) { return Number(x).toFixed(2); }).join(', ') + '</div></div>' +
+      '<div class="mono muted" style="font-size:7.8pt;text-align:right">Radar after: ' + esc(radar) + '<br>' + esc(opt) + '<br>OSM as of ' + esc(d.osm_snapshot) + '</div></div>' +
+      '<div class="k5" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2.4mm">' +
+      '<div class="k"><div class="lbl">Area hit</div><div class="kv" style="color:#6B2F0C">' + fmt(k.area, 2) + ' km²</div><div class="ks">' + fmt(k.area_hi, 2) + ' km² high confidence</div></div>' +
+      '<div class="k"><div class="lbl">Buildings</div><div class="kv">' + fmt(k.bld) + '</div><div class="ks">likely hit · ' + fmt(k.bld_hi) + ' high conf.</div></div>' +
+      '<div class="k"><div class="lbl">Roads</div><div class="kv" style="color:#B0105F">' + fmt(k.road_km, 1) + ' km</div><div class="ks">affected</div></div>' +
+      '<div class="k"><div class="lbl">Bridges</div><div class="kv" style="color:#9E0B6B">' + fmt(k.br_likely) + '</div><div class="ks">likely damaged · +' + fmt(k.br_possibly) + ' possibly</div></div>' +
+      '<div class="k" style="background:#FCE8EC"><div class="lbl">Cut off</div><div class="kv" style="color:#C8102E">' + fmt(k.cut) + '</div><div class="ks">settlements · ' + fmt(k.cut_hi) + ' if confident only</div></div></div>' +
+      '<div class="cols" style="display:flex;gap:4mm">' +
+      '<div class="mapwrap"><div class="mapin"><img src="data/' + id + '/map.jpg" alt="Map of mapped damage, cut-off settlements and repair priorities"><svg viewBox="0 0 ' + d.W + ' ' + d.H + '" preserveAspectRatio="none" aria-hidden="true">' + poly + hit + marks + '</svg></div>' +
+      '<div class="muted" style="font-size:7pt;margin-top:2px">Brown = debris (dark: high confidence) · blue = new water · amber = optical only · pink = road affected · red ◆ cut off · orange ▲ long detour · blue ✚ health facility · numbers = repair priority</div></div>' +
+      '<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3mm">' +
+      '<div class="box" style="background:#F4EEFB"><div class="lbl" style="margin-bottom:3px">Priority actions</div><ol>' + d.sitrep.actions.map(function (a) { return '<li>' + esc(a) + '</li>'; }).join('') + '</ol></div>' +
+      '<div><div class="lbl">Most affected settlements</div><table><tr><th>Settlement</th><th>Status</th><th class="num">To health facility</th><th class="num">Bldgs</th></tr>' +
+      (top.length ? top.map(function (s) { return '<tr><td>' + esc(s.n || 'Unnamed ' + (s.pl || '')) + '</td><td>' + (s.s === 'cut' ? 'cut off' : 'long detour') + (s.s === 'cut' ? (s.foot ? ' · foot ok' : ' · no foot') : '') + '</td><td class="num">' + (s.s === 'cut' ? fmt(s.pre) + ' min → none' : fmt(s.pre) + ' → ' + fmt(s.post) + ' min') + '</td><td class="num">' + fmt(s.b) + '</td></tr>'; }).join('')
+        : '<tr><td colspan="4">No settlement lost its road connection.</td></tr>') + '</table></div>' +
+      '<div><div class="lbl">Named bridges likely damaged</div><div style="font-size:8.8pt">' + (named.length ? esc(named.join(' · ')) : 'none named') + (unnamed ? ' — plus ' + unnamed + ' unnamed' : '') + '</div></div>' +
+      '</div></div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:3mm"><div class="box"><div class="lbl" style="margin-bottom:3px">How sure are we</div><div style="font-size:8.6pt">' + sure + '</div></div>' +
+      '<div class="box"><div class="lbl" style="margin-bottom:3px">What this report cannot tell you</div><div style="font-size:8.6pt">' + d.sitrep.notes.map(esc).join(' ') + '</div></div></div>' +
+      '<div style="margin-top:auto;border-top:1.4px solid #1B1530;padding-top:4px;font-size:7pt" class="muted">Contains modified Copernicus Sentinel data ' + String(d.event).slice(0, 4) + '. Produced using Copernicus WorldDEM-30 © DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018 provided under COPERNICUS by the European Union and ESA; all rights reserved. © OpenStreetMap contributors (ODbL). Flood model trained on Kuro Siwo (Bountos et al., 2024).<br>Every number on this page is computed by the system from the run files. Educational prototype — not an operational tool.</div>';
+  }
+})();
+</script>
+</body>
+</html>

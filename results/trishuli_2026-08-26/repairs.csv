@@ -1,0 +1,6 @@
+rank,way_osm_id,name,highway,is_bridge,damaged_m,settlements_reconnected,buildings_reconnected,names,lat,lon
+1,341771104,(unnamed),unclassified,False,534,4,215,"Chipleti, Dharna bhadaure, Salim Bhitta, Siruchet",28.02516,85.18655
+2,344362125,(unnamed),unclassified,False,54,2,179,"Upra village, Apenou village",27.98148,85.44589
+3,379104232,Pasang Lhamu Highway,primary,False,3443,1,222,Bhainse,27.95524,85.169
+4,1154995098,(unnamed),unclassified,False,3198,1,91,Haku Besi,28.0993,85.25568
+5,340567894,(unnamed),unclassified,False,370,1,21,Gyalmi village,27.97445,85.4374

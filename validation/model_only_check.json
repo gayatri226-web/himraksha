@@ -1,0 +1,55 @@
+{
+  "what": "Contribution of the U-Net (AI component) on two unseen Himalayan events",
+  "trishuli_2026": {
+    "unet_water_vs_ems": {
+      "precision": 0.994,
+      "recall": 0.043,
+      "f1": 0.083,
+      "iou": 0.043,
+      "ems_km2": 7.49,
+      "ours_km2": 0.326
+    },
+    "ablation_vs_ems": {
+      "with_unet": {
+        "precision": 0.918,
+        "recall": 0.538,
+        "f1": 0.678
+      },
+      "without_unet": {
+        "precision": 0.912,
+        "recall": 0.495,
+        "f1": 0.642
+      },
+      "with_unet_high_conf": {
+        "precision": 0.953,
+        "recall": 0.272,
+        "f1": 0.424
+      },
+      "without_unet_high_conf": {
+        "precision": 0.946,
+        "recall": 0.236,
+        "f1": 0.377
+      },
+      "note": "Upper bound: removed pixels might partly be picked up by change detection if the model were absent."
+    },
+    "unet_vs_sentinel2": {
+      "unet_water_km2": 0.612,
+      "unet_water_high_conf_km2": 0.366,
+      "unet_water_where_s2_clear_km2": 0.169,
+      "s2_says_new_water_pct": 15.0,
+      "s2_says_debris_pct": 30.5,
+      "s2_says_no_change_pct": 54.5
+    }
+  },
+  "chamoli_2021": {
+    "unet_vs_sentinel2": {
+      "unet_water_km2": 0.072,
+      "unet_water_high_conf_km2": 0.006,
+      "unet_water_where_s2_clear_km2": 0.067,
+      "s2_says_new_water_pct": 0.0,
+      "s2_says_debris_pct": 0.0,
+      "s2_says_no_change_pct": 100.0
+    },
+    "note": "No EMS map for this run; U-Net found little water (winter debris flood), mostly low confidence (the two orbits disagree), and none of it is confirmed by Sentinel-2 two weeks later -> treated as unconfirmed."
+  }
+}

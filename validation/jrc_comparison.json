@@ -1,0 +1,185 @@
+{
+  "jrc_source": "JRC Global Surface Water v1.4 occurrence 1984-2021 (Pekel et al., 2016)",
+  "unet_new_water_km2": 0.612,
+  "unet_new_water_on_jrc50_water_km2": 0.012,
+  "variants": {
+    "no JRC": {
+      "impact_km2": 6.742,
+      "removed_km2": 0.0,
+      "removed_by_class_km2": {
+        "new water": 0.0,
+        "debris darkened": 0.0,
+        "debris brightened": 0.0
+      },
+      "ems_area_all": {
+        "precision": 0.918,
+        "recall": 0.509,
+        "f1": 0.655
+      },
+      "ems_area_high_conf": {
+        "precision": 0.956,
+        "recall": 0.223,
+        "f1": 0.361
+      }
+    },
+    "JRC >= 25%": {
+      "impact_km2": 6.166,
+      "removed_km2": 0.575,
+      "removed_by_class_km2": {
+        "new water": 0.019,
+        "debris darkened": 0.401,
+        "debris brightened": 0.155
+      },
+      "ems_area_all": {
+        "precision": 0.929,
+        "recall": 0.474,
+        "f1": 0.628
+      },
+      "ems_area_high_conf": {
+        "precision": 0.977,
+        "recall": 0.211,
+        "f1": 0.347
+      }
+    },
+    "JRC >= 50%": {
+      "impact_km2": 6.365,
+      "removed_km2": 0.377,
+      "removed_by_class_km2": {
+        "new water": 0.012,
+        "debris darkened": 0.25,
+        "debris brightened": 0.114
+      },
+      "ems_area_all": {
+        "precision": 0.927,
+        "recall": 0.487,
+        "f1": 0.639
+      },
+      "ems_area_high_conf": {
+        "precision": 0.974,
+        "recall": 0.216,
+        "f1": 0.354
+      }
+    },
+    "JRC >= 75%": {
+      "impact_km2": 6.561,
+      "removed_km2": 0.18,
+      "removed_by_class_km2": {
+        "new water": 0.003,
+        "debris darkened": 0.12,
+        "debris brightened": 0.057
+      },
+      "ems_area_all": {
+        "precision": 0.925,
+        "recall": 0.501,
+        "f1": 0.65
+      },
+      "ems_area_high_conf": {
+        "precision": 0.968,
+        "recall": 0.22,
+        "f1": 0.359
+      }
+    },
+    "JRC >= 90%": {
+      "impact_km2": 6.682,
+      "removed_km2": 0.06,
+      "removed_by_class_km2": {
+        "new water": 0.0,
+        "debris darkened": 0.04,
+        "debris brightened": 0.02
+      },
+      "ems_area_all": {
+        "precision": 0.921,
+        "recall": 0.509,
+        "f1": 0.656
+      },
+      "ems_area_high_conf": {
+        "precision": 0.963,
+        "recall": 0.223,
+        "f1": 0.362
+      }
+    }
+  },
+  "full_pipeline_rerun_no_JRC_vs_JRC50": {
+    "damage": {
+      "buildings_likely_hit": [
+        2179,
+        2179
+      ],
+      "buildings_hit_high_conf": [
+        1878,
+        1873
+      ],
+      "road_km_likely_affected": [
+        40.42,
+        40.38
+      ],
+      "bridges_likely_damaged": [
+        27,
+        27
+      ],
+      "bridges_possibly_damaged": [
+        17,
+        17
+      ]
+    },
+    "cut_off_all_detections": [
+      37,
+      37
+    ],
+    "cut_off_confident_only": [
+      27,
+      27
+    ],
+    "ems_buildings": [
+      {
+        "ems_damaged": 2964,
+        "we_flagged": 2360,
+        "recall": 0.796,
+        "ours_flagged": 1834,
+        "ours_confirmed": 1717,
+        "precision": 0.936
+      },
+      {
+        "ems_damaged": 2964,
+        "we_flagged": 2360,
+        "recall": 0.796,
+        "ours_flagged": 1834,
+        "ours_confirmed": 1717,
+        "precision": 0.936
+      }
+    ],
+    "ems_roads": [
+      {
+        "ems_damaged_km": 47.41,
+        "recall": 0.673,
+        "ours_km": 30.94,
+        "precision": 0.92
+      },
+      {
+        "ems_damaged_km": 47.41,
+        "recall": 0.673,
+        "ours_km": 30.92,
+        "precision": 0.92
+      }
+    ],
+    "ems_bridges": [
+      {
+        "ems_damaged": 28,
+        "we_flagged": 19,
+        "ours_flagged": 26,
+        "ours_confirmed": 21,
+        "precision": 0.808,
+        "recall": 0.679
+      },
+      {
+        "ems_damaged": 28,
+        "we_flagged": 19,
+        "ours_flagged": 26,
+        "ours_confirmed": 21,
+        "precision": 0.808,
+        "recall": 0.679
+      }
+    ]
+  },
+  "decision": "Keep the pipeline WITHOUT JRC. The U-Net already separates permanent water (only 0.012 of 0.612 km2 of its new water falls on JRC >=50% water). JRC mainly removes debris deposited in the normal river channel, which EMS counts as damage, so masking it lowers recall and F1 at every threshold while damage and cut-off results are unchanged. It would also add an input outside the brief's core list."
+}

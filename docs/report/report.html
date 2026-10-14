@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HimRaksha — Track B report</title>
+<style>
+@page { size: A4; margin: 13mm 14mm 13mm 14mm; }
+:root { --ink:#1B1530; --mut:#5b5670; --acc:#6D28D9; --line:#d9d4e8; --soft:#f4f1fa; }
+* { box-sizing: border-box; }
+html { font-family: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif; font-size: 9.2pt; line-height: 1.38; color: var(--ink); }
+body { margin: 0; }
+h1 { font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif; font-size: 21pt; margin: 0; letter-spacing: -0.3px; }
+h1 span { color: var(--acc); }
+h2 { font-family: "Space Grotesk", "Helvetica Neue", Arial, sans-serif; font-size: 12.5pt; margin: 11px 0 4px; padding-bottom: 2px; border-bottom: 1.5px solid var(--ink); break-after: avoid; }
+h3 { font-size: 9.8pt; margin: 8px 0 2px; break-after: avoid; }
+p { margin: 3px 0 5px; }
+ul, ol { margin: 3px 0 6px; padding-left: 16px; }
+li { margin: 1px 0; }
+.sub { color: var(--mut); font-size: 9pt; margin-top: 2px; }
+.box { background: var(--soft); border: 1px solid var(--line); border-radius: 6px; padding: 7px 10px; margin: 7px 0; }
+table { border-collapse: collapse; width: 100%; margin: 4px 0 6px; font-size: 8.6pt; break-inside: avoid; }
+th, td { border-bottom: 1px solid var(--line); padding: 2.5px 5px; text-align: left; vertical-align: top; }
+th { background: var(--soft); font-weight: 600; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+figure { margin: 6px 0 8px; break-inside: avoid; }
+figure img { width: 100%; display: block; border: 1px solid var(--line); border-radius: 4px; }
+figcaption { font-size: 8.2pt; color: var(--mut); margin-top: 3px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.small { font-size: 8.3pt; }
+.kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 8px 0 4px; }
+.kpi div { border: 1.3px solid var(--ink); border-radius: 6px; padding: 5px 7px; }
+.kpi b { display: block; font-family: "Space Grotesk", Arial, sans-serif; font-size: 15pt; line-height: 1.1; }
+.kpi span { font-size: 7.8pt; color: var(--mut); }
+.pb { break-before: page; }
+code { font-family: "IBM Plex Mono", Menlo, monospace; font-size: 8.2pt; background: var(--soft); padding: 0 2px; border-radius: 2px; }
+.cite li { font-size: 8.2pt; }
+</style>
+</head>
+<body>
+
+<!-- ===================== PAGE 1 ===================== -->
+<h1>Him<span>Raksha</span> — mapping flood damage from space</h1>
+<div class="sub">Multimodal AI Hackathon 2026 · Track B · Team HimRaksha: <b>Anurag Kasi</b> and <b>Gayatri Markale</b> (K. J. Somaiya School of Engineering, Mumbai) · Case study: 26 August 2026 Bhote Koshi–Trishuli flood, Nepal</div>
+
+<div class="box">
+<b>What it does.</b> HimRaksha takes an <b>area and a flood date</b>, downloads raw Sentinel-1 radar (and Sentinel-2 optical images where the sky is clear), and answers three questions for rescue teams: <b>where did the flood hit, what was damaged, and who is cut off</b>. A U-Net trained on Kuro Siwo finds new water; adaptive radar change detection finds debris. The results are overlaid on pre-event OpenStreetMap, and settlements are routed to the nearest health facility on the damaged road network. Everything ends in a map dashboard and a one-page situation report generated from the run's own numbers. The same unchanged pipeline was run end-to-end on a second unseen Himalayan event (Chamoli, 2021).
+</div>
+
+<div class="kpi">
+  <div><b>7.68 km²</b><span>valley floor impacted (2.58 km² high confidence)</span></div>
+  <div><b>2,263</b><span>buildings likely hit, of 82,033 mapped</span></div>
+  <div><b>27 + 17</b><span>bridges likely / possibly damaged, of 179</span></div>
+  <div><b>37 / 172</b><span>settlements cut off from a health facility (27 confident)</span></div>
+</div>
+
+<table>
+<tr><th>Checked against Copernicus EMS EMSR927 (AOI01–03)</th><th class="n">Precision</th><th class="n">Recall</th><th class="n">F1</th></tr>
+<tr><td>Affected area (pixels)</td><td class="n">0.92</td><td class="n">0.54</td><td class="n">0.68</td></tr>
+<tr><td>Damaged / destroyed buildings (2,964 in EMS)</td><td class="n">0.93</td><td class="n">0.81</td><td class="n">0.87</td></tr>
+<tr><td>Damaged roads (47.4 km in EMS)</td><td class="n">0.92</td><td class="n">0.70</td><td class="n">0.79</td></tr>
+<tr><td>Bridges graded "likely damaged" (28 in EMS)</td><td class="n">0.81</td><td class="n">0.68</td><td class="n">0.74</td></tr>
+</table>
+<p class="small">EMS is never an input; it is read only by the evaluation scripts. The main miss is the narrow upstream gorges (Section 5).</p>
+
+<h2>1. Data and data rules</h2>
+<table>
+<tr><th>Input</th><th>What we used for Trishuli</th><th>Role</th></tr>
+<tr><td>Sentinel-1 IW GRD (raw, CDSE)</td><td>Orbit 85 ascending 16 → 28 Aug (2 days after); orbit 19 descending 24 Aug → 5 Sep (10 days after). Same orbit, 12 days apart, 100 % coverage.</td><td>Main input: water and debris through cloud</td></tr>
+<tr><td>Sentinel-2 L2A (CDSE)</td><td>Clearest dates first: before 12–24 Aug, after 8–20 Sep; 40 % of the valley clear on both dates</td><td>Optical confirmation where clear</td></tr>
+<tr><td>Copernicus DEM GLO-30</td><td>Terrain correction, valley mask, model input, flood path</td><td>Terrain</td></tr>
+<tr><td>OpenStreetMap, pre-event</td><td>ohsome API snapshot 27 Jul 2026 (before 26 Aug, as the rules require): 82,033 buildings, 1,574 km of road, 179 bridges, 172 settlements, 15 health facilities</td><td>Assets, road graph</td></tr>
+<tr><td>Kuro Siwo</td><td>22,972 chips; 19,071 training, 3,901 validation from 7 held-out events</td><td>Model training only</td></tr>
+<tr><td>EMSR927, JRC GSW</td><td>EMS grading maps; JRC occurrence tile 80E_30N</td><td><b>Checking / comparison only</b></td></tr>
+</table>
+<p class="small">The brief names ohsome API v1. Its extraction endpoints now refuse requests (HTTP 403) ahead of their 30 Nov 2026 shutdown, so we use API v2 with the same pre-event snapshot. The OSM date is checked to be before the flood date in two places in the notebook.</p>
+
+<!-- ===================== PAGE 2 ===================== -->
+<h2 class="pb">2. Method</h2>
+<figure>
+<svg viewBox="0 0 900 205" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="IBM Plex Sans, Arial, sans-serif" font-size="11.5">
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#1B1530"/></marker></defs>
+  <g fill="#f4f1fa" stroke="#1B1530" stroke-width="1.3">
+    <rect x="4" y="8" width="150" height="34" rx="5"/><rect x="4" y="50" width="150" height="34" rx="5"/>
+    <rect x="4" y="92" width="150" height="34" rx="5"/><rect x="4" y="134" width="150" height="34" rx="5"/>
+  </g>
+  <g fill="#1B1530"><text x="14" y="29">Sentinel-1 GRD (raw)</text><text x="14" y="71">Sentinel-2 L2A</text>
+  <text x="14" y="113">Copernicus DEM 30 m</text><text x="14" y="155">OSM before the event</text></g>
+  <g fill="#ffffff" stroke="#1B1530" stroke-width="1.3">
+    <rect x="200" y="8" width="170" height="34" rx="5"/><rect x="200" y="92" width="170" height="34" rx="5"/>
+    <rect x="200" y="50" width="170" height="34" rx="5"/>
+  </g>
+  <g fill="#1B1530"><text x="210" y="24">ESA SNAP: orbit, noise,</text><text x="210" y="37">sigma0, terrain corr., dB</text>
+  <text x="210" y="71">cloud mask, NDVI / MNDWI</text><text x="210" y="108">HAND &lt; 50 m, slope &lt; 30°</text><text x="210" y="121">= valley floor</text></g>
+  <rect x="415" y="8" width="160" height="76" rx="5" fill="#ede6fb" stroke="#6D28D9" stroke-width="1.6"/>
+  <g fill="#1B1530"><text x="425" y="27" font-weight="600">Per orbit (asc + desc)</text><text x="425" y="44">U-Net → new water</text>
+  <text x="425" y="60">adaptive dB change →</text><text x="425" y="75">debris dark / bright</text></g>
+  <rect x="615" y="8" width="130" height="76" rx="5" fill="#fff" stroke="#1B1530" stroke-width="1.3"/>
+  <g fill="#1B1530"><text x="625" y="27" font-weight="600">Fusion</text><text x="625" y="44">only orbits that see</text><text x="625" y="58">a pixel vote; + S2</text><text x="625" y="73">→ confidence 1–3</text></g>
+  <rect x="615" y="110" width="130" height="58" rx="5" fill="#fff" stroke="#1B1530" stroke-width="1.3"/>
+  <g fill="#1B1530"><text x="625" y="128" font-weight="600">Damage</text><text x="625" y="143">buildings, roads,</text><text x="625" y="157">bridges (graded)</text></g>
+  <rect x="770" y="8" width="126" height="76" rx="5" fill="#fff" stroke="#1B1530" stroke-width="1.3"/>
+  <g fill="#1B1530"><text x="780" y="27" font-weight="600">Cut-off</text><text x="780" y="44">route to nearest</text><text x="780" y="58">health facility / town,</text><text x="780" y="73">footpaths, repairs</text></g>
+  <rect x="770" y="110" width="126" height="58" rx="5" fill="#6D28D9" stroke="#1B1530" stroke-width="1.3"/>
+  <g fill="#fff"><text x="780" y="128" font-weight="600">Dashboard</text><text x="780" y="143">+ one-page sitrep</text><text x="780" y="157">+ flood path (bonus)</text></g>
+  <g stroke="#1B1530" stroke-width="1.3" fill="none" marker-end="url(#a)">
+    <path d="M154 25H198"/><path d="M154 67H198"/><path d="M154 109H198"/>
+    <path d="M370 25H413"/><path d="M370 109H392V70H413"/><path d="M370 67C390 67 390 140 610 140" stroke-dasharray="0"/>
+    <path d="M575 46H613"/><path d="M745 46H768"/><path d="M680 84V108"/><path d="M745 139H768"/><path d="M833 84V108"/>
+    <path d="M154 151H560V160H613"/>
+  </g>
+  <rect x="200" y="176" width="300" height="24" rx="5" fill="#fff" stroke="#c0352b" stroke-dasharray="4 3"/>
+  <text x="210" y="192" fill="#c0352b">EMS EMSR927 / JRC → evaluation scripts only (never inputs)</text>
+</svg>
+<figcaption>Figure 1. Pipeline. One Colab notebook runs everything from raw data; only the area, flood date and OSM snapshot change between events. A full Trishuli run takes about 1 hour.</figcaption>
+</figure>
+
+<ol>
+<li><b>Image pairs.</b> The Copernicus catalogue is searched ±36 days around the date for before/after Sentinel-1 images of the <b>same relative orbit</b> (same viewing geometry, so pixels can be compared directly), preferring ≥ 60 % coverage of the area. The best ascending and best descending pairs are kept.</li>
+<li><b>Raw radar processing (our own chain).</b> Raw GRD → Apply-Orbit-File → thermal and border noise removal → radiometric calibration (σ⁰) → subset → Range-Doppler terrain correction on the Copernicus DEM → 10 m UTM, dB (ESA SNAP <code>gpt</code>, scripted in <code>grd_preprocess.py</code>).</li>
+<li><b>Valley floor.</b> HAND (height above nearest drainage, pysheds) &lt; 50 m and slope &lt; 30°. Floods and debris flows run along the valley floor; this removes most false change on slopes.</li>
+<li><b>New water: the U-Net</b> (Section 3), applied to each before/after pair.</li>
+<li><b>Debris: adaptive change detection.</b> Despeckled VV and VH change with a threshold set per area, max(2 dB, 2.5 × robust σ of the valley) (Trishuli: 2.8–3.0 dB), finds ground that <b>darkened</b> (wet mud, ponding) or <b>brightened</b> (boulders, rough deposits). Patches &lt; 0.5 ha are removed.</li>
+<li><b>Observability-aware fusion.</b> An orbit only votes where it returned valid data (radar shadow, layover and swath edges come out of terrain correction as no-data). Confidence is <i>high</i> when the observing orbits agree, <i>medium</i> with a single view, and <i>low</i> when they disagree.</li>
+<li><b>Sentinel-2 when clear.</b> SCL cloud mask (3-pixel buffer); composite of up to 4 dates per side, clearest first. Rules: new water (MNDWI &gt; 0, NDVI &lt; 0.1), vegetation stripped (NDVI drop &gt; 0.25), river channel filled. Agreement with radar raises confidence to high; optical-only finds are added at medium confidence.</li>
+<li><b>Damage.</b> Buildings and roads within 10 m of the impact count as likely hit. A bridge always has water under it, so touching impact is not enough: <b>likely damaged</b> means ≥ 50 % of the deck footprint is impacted <i>and</i> debris is present at both ends; <b>possibly damaged</b> means impact within 30 m. Bridges are split into vehicle, foot and other.</li>
+<li><b>Who is cut off.</b> An OSM road graph with travel time by road class. Damaged segments are removed, and bridges only by their grade. Each settlement is routed (Dijkstra) to the nearest <b>health facility or town</b>, as the brief asks, and classed as cut off, long detour (&gt; 1.5× and &gt; +5 min) or unaffected. Footpaths are checked separately. Repair priority: reopen one damaged way at a time and count the settlements and buildings reconnected. Roads leaving the area are reported, never counted as a destination.</li>
+<li><b>Bonus: flood path.</b> From any clicked point, snap to the channel and follow D8 steepest descent on the DEM. Settlements with buildings ≤ 1 km from the path and ≤ 30 m above it are listed in order downstream (high exposure ≤ 10 m).</li>
+<li><b>Dashboard and sitrep.</b> Each run is exported to an offline Leaflet dashboard: clickable map layers, an "All / Confident only" switch, cut-off, repair, bridge, flood-path, evidence and validation tabs. The A4 situation report is filled by rules from the same files, so <b>no number is typed by hand</b>.</li>
+</ol>
+
+<!-- ===================== PAGE 3 ===================== -->
+<h2 class="pb">3. AI component — flood segmentation model</h2>
+<p><b>Model.</b> U-Net with a ResNet-34 encoder initialised from ImageNet (allowed by the organizers). Inputs are 6 channels: pre- and post-event VV and VH in dB, relative DEM height and slope. Outputs are 3 classes: dry, permanent water, flood water. Loss: cross-entropy (flood ×2) + Dice; AdamW, one-cycle LR 5×10⁻⁴, 15 epochs, rotation and flip augmentation, Kaggle GPU. Exported to ONNX, so the pipeline runs it on a CPU.</p>
+<p><b>Training data and split.</b> Kuro Siwo (Bountos et al., 2024), 256 × 256 chips at 10 m. The split is <b>by flood event, not by chip</b>, so the 3,901 validation chips come from 7 events never seen in training.</p>
+
+<div class="two">
+<div>
+<table>
+<tr><th>Held-out Kuro Siwo events</th><th class="n">Threshold baseline</th><th class="n">U-Net</th></tr>
+<tr><td>Flood F1</td><td class="n">0.588</td><td class="n"><b>0.819</b></td></tr>
+<tr><td>Flood precision</td><td class="n">0.810</td><td class="n">0.874</td></tr>
+<tr><td>Flood recall</td><td class="n">0.462</td><td class="n">0.771</td></tr>
+<tr><td>Flood IoU</td><td class="n">0.417</td><td class="n">0.694</td></tr>
+<tr><td>Permanent-water IoU</td><td class="n">0.282</td><td class="n">0.639</td></tr>
+</table>
+<p class="small">Baseline = the classic rule (dark after and ≥ 3 dB darker). The best-IoU checkpoint is kept; it came at epoch 1, and later epochs stayed at 0.67–0.69 IoU. The model is stable, but longer training did not generalise better to new events.</p>
+</div>
+<figure style="margin-top:4px"><img src="img/curves.jpg" alt="Training loss and validation curves"><figcaption>Figure 2. Training loss and validation scores on the held-out events.</figcaption></figure>
+</div>
+
+<h3>On unseen Himalayan scenes</h3>
+<table>
+<tr><th>Check (<code>code/evaluation/model_only_check.py</code>)</th><th>Result</th></tr>
+<tr><td>Trishuli 2026: U-Net water inside the EMSR927 affected area</td><td><b>99.4 %</b> (0.324 of 0.326 km²). What the model calls water is almost always real.</td></tr>
+<tr><td>Trishuli 2026: whole system with vs without the U-Net</td><td>Area F1 <b>0.678 vs 0.642</b>; high-confidence F1 0.424 vs 0.377; recall 0.54 vs 0.50</td></tr>
+<tr><td>Trishuli 2026: separating permanent from new water</td><td>Only 0.012 of 0.612 km² of U-Net "new water" lies on JRC permanent water (occurrence ≥ 50 %)</td></tr>
+<tr><td>Trishuli 2026: vs Sentinel-2 where clear, 2–3 weeks later</td><td>15 % optical water, 30 % optical debris, 55 % no change. Water may have drained before the clear optical date.</td></tr>
+<tr><td>Chamoli 2021 (winter debris flood)</td><td>0.07 km² of water, mostly low confidence, not confirmed by Sentinel-2 → treated as unconfirmed</td></tr>
+</table>
+<p><b>Honest reading.</b> The model is precise and clearly better than thresholding on held-out floods. In the Himalayan case studies, though, most damage is <b>debris, not open water</b>: EMS classes the Trishuli event as "Mass Movement / Landslide", and water is only 4 % of the EMS area. That is why HimRaksha pairs the model with change detection for debris rather than relying on the model alone. Without the model, area F1 falls by up to 0.036. This is an upper bound, because change detection might catch part of that water if the model were absent. We did not test on Sen1Floods11, which is optional in the brief.</p>
+
+<h2>4. Results — Trishuli, 26 August 2026</h2>
+
+<p><b>Where.</b> 7.68 km² of the 100.9 km² valley floor impacted: 6.74 km² from radar (0.61 new water, 4.86 debris darkened, 1.27 debris brightened) plus 0.94 km² added by Sentinel-2. Radar and optical agree on 0.96 km². Both orbits saw 99.98 % of the valley floor. Impact follows the Bhote Koshi–Trishuli from the Rasuwagadhi border down to Bidur.</p>
+<p><b>What.</b> 2,263 buildings likely hit (1,887 high confidence) and 43.1 km of road (202 segments; 7.0 km of it primary road). <b>27 bridges likely damaged</b> (23 high confidence; 16 vehicle, 8 foot, 3 other) and 17 possibly damaged.</p>
+<p><b>Who.</b> Of 172 settlements, <b>37 are cut off</b> from every health facility by road (27 counting confident detections only), and 18 have long detours. 25 of the 37 can still be reached on foot. About 3,300 buildings lie within 500 m of cut-off settlements (a population proxy). 51 settlements had no mapped road within 500 m even before the flood and are reported separately.</p>
+<p><b>Repairs.</b> 5 single repairs reconnect someone. The top one is an unnamed road near Chipleti (534 m damaged), which reconnects 4 settlements (~215 buildings); third is the Pasang Lhamu Highway near Bhainse.</p>
+<p><b>Flood path (bonus).</b> From Rasuwagadhi (28.276 N, 85.383 E), the D8 path runs 72 km and passes 9 settlements (7 high exposure) and 1,991 buildings in the corridor, 516 of them ≤ 10 m above the channel. 73 % of the path inside the mapped valley has detected impact within 100 m, an independent consistency check between terrain and satellite.</p>
+
+<div class="two pb" style="grid-template-columns: 0.9fr 1.1fr; align-items:start">
+<figure><img src="img/damage_zoom.jpg" alt="Damage map, lower Trishuli corridor"><figcaption>Figure 3. Lower Trishuli corridor: debris (dark), new water, buildings likely hit (red), affected roads (black) and graded bridges (stars).</figcaption></figure>
+<figure><img src="img/dash.jpg" alt="HimRaksha dashboard, Trishuli"><figcaption>Figure 4. The dashboard for Trishuli: headline numbers, satellite data used and the clickable impact map (cut-off settlements ◆, repairs numbered, health facilities ✚). Tabs list who needs help, repairs, bridges, the flood path and validation; the <i>Situation report</i> button opens the generated one-page sitrep.</figcaption></figure>
+</div>
+<!-- ===================== PAGE 5 ===================== -->
+<h2>5. Comparison with Copernicus EMS EMSR927</h2>
+<p>We scored inside the three EMS areas that lie in our run area (AOI01 Syapru Besi, AOI02 Timure, AOI03 Bidur, latest product version each; "not analysed" parts removed). EMS photo-interprets very-high-resolution optical images; we use free 10 m radar and optical data automatically. Assets are matched within 20 m (buildings), 30 m (roads) and 60 m (bridges).</p>
+<figure><img src="img/ems.jpg" alt="Comparison with EMSR927 per area"><figcaption>Figure 5. Green = both agree, orange = HimRaksha only, magenta = EMS only (missed), grey = outside our valley mask. Dots = EMS damaged buildings (green found, magenta missed).</figcaption></figure>
+<table>
+<tr><th>EMS area</th><th class="n">EMS affected km²</th><th class="n">in our valley mask</th><th class="n">Area P</th><th class="n">Area R</th><th class="n">Area F1</th><th class="n">Buildings P</th><th class="n">Buildings R</th></tr>
+<tr><td>AOI01 Syapru Besi (gorge)</td><td class="n">1.11</td><td class="n">59 %</td><td class="n">0.95</td><td class="n">0.19</td><td class="n">0.32</td><td class="n">0.97</td><td class="n">0.64</td></tr>
+<tr><td>AOI02 Timure (gorge)</td><td class="n">1.29</td><td class="n">62 %</td><td class="n">1.00</td><td class="n">0.16</td><td class="n">0.27</td><td class="n">0.99</td><td class="n">0.75</td></tr>
+<tr><td>AOI03 Bidur (wide valley)</td><td class="n">5.09</td><td class="n">93 %</td><td class="n">0.91</td><td class="n">0.71</td><td class="n">0.80</td><td class="n">0.92</td><td class="n">0.85</td></tr>
+<tr><td><b>All three</b></td><td class="n">7.49</td><td class="n">83 %</td><td class="n"><b>0.92</b></td><td class="n"><b>0.54</b></td><td class="n"><b>0.68</b></td><td class="n"><b>0.93</b></td><td class="n"><b>0.81</b></td></tr>
+</table>
+<ul>
+<li><b>Precision is high everywhere (0.91–1.00):</b> what HimRaksha flags is almost always confirmed by EMS. Only high-confidence pixels: precision 0.95, recall 0.27.</li>
+<li><b>Recall is the weak point in gorges.</b> About 40 % of the EMS debris at Syapru Besi and Timure lies outside our valley mask (high on steep banks), and slopes facing away from or towards the satellite are hidden by radar shadow or layover. Inside the valley mask, area F1 is 0.76.</li>
+<li><b>Roads:</b> 70 % of the 47.4 km of EMS-damaged road found, 92 % of what we flag confirmed. <b>Bridges:</b> "likely damaged" finds 19 of 28 EMS bridges at 81 % precision; adding "possibly damaged" finds 22 of 28 at 63 %. That is why "possibly" is shown as "needs a ground check".</li>
+<li><b>Sentinel-2 helped:</b> radar only gave area F1 0.655 and buildings recall 0.80; with Sentinel-2, 0.678 and 0.81.</li>
+</ul>
+<h3>JRC Global Surface Water: compared, not used</h3>
+<p>The organizers allowed JRC permanent water if we compared with and without it. Masking JRC water (occurrence ≥ 25 / 50 / 75 %) <b>lowered</b> area F1 at every threshold (0.655 → 0.628 / 0.639 / 0.650, radar-only run). It mainly removes debris that filled the normal river channel, which EMS counts as damage. Buildings, roads, bridges and cut-off results did not change. The U-Net already separates permanent from new water, so we leave JRC out.</p>
+
+<!-- ===================== PAGE 6 ===================== -->
+<h2>6. Second unseen event: Chamoli, 7 February 2021</h2>
+<div class="two">
+<div>
+<p>To show that the system runs for <b>any area and date</b>, we ran the unchanged notebook on the Rishiganga–Dhauliganga debris flood (Uttarakhand, India), changing only CONFIG. It found Sentinel-1 orbits 56 (asc.) and 63 (desc.) with 100 % coverage and clear winter Sentinel-2 (73 % of the valley), switched UTM zone automatically, and used the OSM snapshot of 6 Feb 2021.</p>
+<p>It traced a debris corridor from Ronti Gad down the Rishiganga to the Raini confluence and along the Dhauliganga to the Tapovan barrage, consistent with the before/after Sentinel-2 images (1.54 km², 0.36 km² high confidence). The bridge near the Tapovan barrage was graded likely damaged. Upstream villages (Markura, Panwarsa, Tamak, Bhangyul) were cut off, consistent with reports that the valley above Raini was cut off. It also showed limits: OSM in 2021 had only 219 buildings mapped, and the Raini bridge, in reality destroyed, was only "possibly damaged". There is no EMS grading map for this run, so it is checked visually only.</p>
+</div>
+<figure><img src="img/chamoli.jpg" alt="Dashboard for Chamoli 2021"><figcaption>Figure 6. The Chamoli 2021 run in the dashboard: corridor, cut-off villages (◆) and the generated list.</figcaption></figure>
+</div>
+
+<h2>7. Limitations — what HimRaksha cannot do</h2>
+<ul>
+<li><b>No early warning.</b> Sentinel-1 passes every 6–12 days and Sentinel-2 needs clear sky, so HimRaksha maps what is left after an event (here 2 and 10 days after). It cannot warn of a glacier collapse or lake burst minutes or hours ahead, and short-lived water may have drained before the next pass.</li>
+<li><b>Gorges.</b> Steep slopes cause radar shadow and layover, and debris high on the banks lies outside the valley mask (HAND &lt; 50 m, slope &lt; 30°). Recall in the Trishuli gorges is 0.16–0.19.</li>
+<li><b>The AI model maps water, not debris.</b> Debris, the main damage in both events, comes from change detection with an adaptive threshold. The model was not tested on Sen1Floods11.</li>
+<li><b>Settings were developed on Trishuli.</b> The valley mask, the change threshold factor (2.5σ) and the bridge rule were chosen while developing on Trishuli, and EMS scores were looked at during development. Chamoli was run with the same settings as an independent test, but there is no reference map to score it. Settings may need changing for wide plains or urban floods, which we did not test.</li>
+<li><b>Only as good as OpenStreetMap.</b> Unmapped buildings and roads cannot be counted as damaged or cut off. Trishuli has no OSM "town" nodes, so routes go to the 15 health facilities. A settlement may be reported "cut off" while a road out of the area still exists (reported separately). Travel times use typical speeds, not road condition.</li>
+<li><b>Bridges and buildings at 10 m.</b> A small bridge deck can fall just outside the mapped impact (Raini). Building "hit" means "inside or within 10 m of the impact", not a structural damage grade.</li>
+<li><b>Clouds and time gap.</b> In the monsoon only 40 % of the Trishuli valley was clear on both Sentinel-2 dates, and the clear images are weeks apart, so optical confirmation is partial.</li>
+<li><b>Runtime.</b> A run takes about 1 hour on free Colab (mostly downloading full radar scenes). It is an educational prototype, not an operational tool.</li>
+</ul>
+
+<div class="two" style="grid-template-columns: 1.55fr 0.45fr; align-items:start; break-inside: avoid">
+<figure><img src="img/flow.jpg" alt="Flood path from Rasuwagadhi"><figcaption>Figure 7. Bonus: flood path traced from Rasuwagadhi on the Copernicus DEM (72 km), with the buildings in the corridor and the settlements along it, red = high exposure. In the dashboard a quick version runs live from any clicked point; it lists settlements by their location rather than by every building.</figcaption></figure>
+<figure><img src="img/sitrep.jpg" alt="Generated situation report"><figcaption>Figure 8. The one-page situation report, generated from the run's files.</figcaption></figure>
+</div>
+<h2>8. Attributions and citations</h2>
+<ul class="cite">
+<li>"Contains modified Copernicus Sentinel data 2026." (Chamoli rehearsal: Copernicus Sentinel data 2021.)</li>
+<li>"Produced using Copernicus WorldDEM-30 © DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018 provided under COPERNICUS by the European Union and ESA; all rights reserved."</li>
+<li>"© OpenStreetMap contributors." Data via the ohsome API (HeiGIT). Derived OSM outputs remain under the ODbL.</li>
+<li>Bountos, N. I., et al. (2024). Kuro Siwo: 33 billion m² under the water. A global multi-temporal satellite dataset for rapid flood mapping. NeurIPS 2024 Datasets and Benchmarks Track. (training data)</li>
+<li>EMSR927 (checking only): "European Union, Copernicus Emergency Management Service data".</li>
+<li>Pekel, J.-F., Cottam, A., Gorelick, N., Belward, A. S. (2016). High-resolution mapping of global surface water and its long-term changes. Nature 540, 418–422. (comparison only)</li>
+<li>Software: ESA SNAP, segmentation-models-pytorch, ONNX Runtime, pysheds, rasterio, GeoPandas, NetworkX, Leaflet.</li>
+</ul>
+<p class="small"><b>Responsibility.</b> This disaster is recent, and many families are still affected. No images of victims are used. Code, run guide and model card: see the repository README (<code>docs/RUN_GUIDE.md</code>, <code>model/README.md</code>).</p>
+</body>
+</html>

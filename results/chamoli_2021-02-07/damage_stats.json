@@ -1,0 +1,23 @@
+{
+  "osm_snapshot": "2021-02-06",
+  "buildings_total": 219,
+  "buildings_likely_hit": 1,
+  "buildings_hit_high_conf": 1,
+  "road_km_total": 155.0,
+  "road_km_likely_affected": 1.43,
+  "road_segments_likely_affected": 13,
+  "footpath_segments_likely_affected": 0,
+  "bridges_total": 15,
+  "bridges_likely_damaged": 1,
+  "bridges_likely_damaged_high_conf": 1,
+  "bridges_possibly_damaged": 2,
+  "bridges_likely_damaged_by_use": {
+    "vehicle": 1
+  },
+  "road_km_affected_by_class": {
+    "track": 0.71,
+    "service": 0.4,
+    "tertiary": 0.3,
+    "unclassified": 0.02
+  }
+}

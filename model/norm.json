@@ -1,0 +1,25 @@
+{
+  "channels": [
+    "pre_VV_dB",
+    "pre_VH_dB",
+    "post_VV_dB",
+    "post_VH_dB",
+    "dem_relative",
+    "slope"
+  ],
+  "sar_clip_db": [
+    -30,
+    5
+  ],
+  "sar_shift": 15,
+  "sar_scale": 10,
+  "dem_rel_scale_m": 50,
+  "pixel_size_m": 10,
+  "slope_scale_deg": 45,
+  "classes": [
+    "dry",
+    "permanent_water",
+    "flood_water"
+  ],
+  "ignore_index": 255
+}

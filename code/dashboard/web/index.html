@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HimRaksha — flood damage dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="wrap">
+
+<header class="top bx">
+  <div class="brand">
+    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 33 L14 13 L20 22 L26 9 L37 33 Z" fill="#7C3AED" stroke="#1B1530" stroke-width="2.5" stroke-linejoin="round"/><path d="M3 33 Q12 28 20 33 T37 33" fill="none" stroke="#1D4FC4" stroke-width="3"/></svg>
+    <div>
+      <div class="name h">Him<span>Raksha</span></div>
+      <div class="small muted">Where it flooded · what was damaged · who is cut off — from raw satellite data</div>
+    </div>
+  </div>
+  <nav class="seg" id="events" aria-label="Choose event"></nav>
+  <div class="seg">
+    <button class="btn" id="btnNew" type="button">+ New analysis</button>
+    <a class="btn acc" id="btnSitrep" href="sitrep.html" target="_blank" rel="noopener">Situation report ↗</a>
+  </div>
+</header>
+
+<!-- ======================= DASHBOARD VIEW ======================= -->
+<section class="view show" id="viewDash" style="flex-direction:column;gap:14px">
+  <section class="kpis" id="kpis" aria-label="Key numbers"></section>
+
+  <div class="main">
+    <aside class="left">
+      <div class="bx card">
+        <div class="lbl">Event</div>
+        <div class="h" style="font-size:19px;margin-top:2px" id="evName">—</div>
+        <div class="small muted" id="evKind"></div>
+        <div class="mono small muted" id="evBox" style="margin-top:4px"></div>
+      </div>
+      <div class="bx card">
+        <div class="lbl" style="margin-bottom:4px">Satellite data used</div>
+        <div id="timeline"></div>
+        <div class="small muted" style="margin-top:6px">Inputs: Sentinel-1/2, Copernicus DEM, pre-event OpenStreetMap. EMS is never an input.</div>
+      </div>
+      <div class="bx" style="padding:10px 6px">
+        <div class="lbl" style="padding:0 8px 4px">Map layers</div>
+        <div id="layers"></div>
+      </div>
+      <div class="bx card">
+        <div class="lbl" style="margin-bottom:6px">Confidence</div>
+        <div class="seg" role="group" aria-label="Confidence filter">
+          <button class="btn on" id="confAll" type="button" aria-pressed="true">All detections</button>
+          <button class="btn" id="confHi" type="button" aria-pressed="false">Confident only</button>
+        </div>
+        <div class="small muted" style="margin-top:8px">Confident = both radar orbits agree, or radar and Sentinel-2 agree. Numbers, map and cut-off status all switch together.</div>
+      </div>
+    </aside>
+
+    <main class="center bx">
+      <div class="maphead">
+        <div class="h" style="font-size:17px" id="mapTitle">Impact map</div>
+        <div class="small muted">Click anything on the map for details · scroll or +/− to zoom · drag to pan</div>
+      </div>
+      <div class="mapbox">
+        <div id="map" role="region" aria-label="Impact map"></div>
+        <div class="bm" role="group" aria-label="Base map">
+          <button type="button" data-base="map" aria-pressed="true">Map</button>
+          <button type="button" data-base="sat" aria-pressed="false">Satellite</button>
+          <button type="button" data-base="terrain" aria-pressed="false">Terrain</button>
+        </div>
+        <div class="maptools">
+          <button type="button" id="zIn" aria-label="Zoom in">+</button>
+          <button type="button" id="zOut" aria-label="Zoom out">−</button>
+          <button type="button" id="zFit" aria-label="Show whole area" style="font-size:12px">⤢</button>
+          <button type="button" id="tracePick" aria-label="Trace a flood path from a point" aria-pressed="false" title="Trace flood path" style="font-size:18px">⤵</button>
+        </div>
+        <div class="hint" id="traceHint">Click any point upstream to trace the flood path</div>
+        <div class="legend" aria-label="Legend">
+          <div><span class="sw" style="background:var(--debris-hi)"></span>Debris — high conf.</div>
+          <div><span class="sw" style="background:var(--debris-lo)"></span>Debris — low conf.</div>
+          <div><span class="sw" style="background:var(--water-hi)"></span>New water</div>
+          <div><span class="sw" style="background:var(--optical)"></span>Optical only (S2)</div>
+          <div><span style="width:18px;height:4px;background:var(--road-hit);display:inline-block"></span>Road affected</div>
+          <div><span style="width:10px;height:10px;background:var(--cut);transform:rotate(45deg);display:inline-block"></span>Cut off</div>
+          <div><span style="width:12px;height:10px;background:var(--detour);clip-path:polygon(50% 0,100% 100%,0 100%);display:inline-block"></span>Long detour</div>
+          <div><span style="width:9px;height:9px;border-radius:50%;border:2px solid var(--ok);display:inline-block"></span>Reachable</div>
+        </div>
+        <div class="bx selcard" id="selcard" aria-live="polite"></div>
+      </div>
+    </main>
+
+    <aside class="right bx">
+      <div class="tabs" role="tablist" id="tabs">
+        <button class="tab" role="tab" data-tab="cut" aria-selected="true">Cut off</button>
+        <button class="tab" role="tab" data-tab="rep" aria-selected="false">Repairs</button>
+        <button class="tab" role="tab" data-tab="br" aria-selected="false">Bridges</button>
+        <button class="tab" role="tab" data-tab="flow" aria-selected="false">Flood path</button>
+        <button class="tab" role="tab" data-tab="ev" aria-selected="false">Evidence</button>
+        <button class="tab" role="tab" data-tab="val" aria-selected="false">Validation</button>
+      </div>
+      <div class="pane" id="pane" role="tabpanel"></div>
+    </aside>
+  </div>
+</section>
+
+<!-- ======================= NEW ANALYSIS VIEW ======================= -->
+<section class="view" id="viewNew" style="flex-wrap:wrap;gap:14px;align-items:flex-start">
+  <form class="bx card" id="newForm" style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:12px" novalidate>
+    <div class="h" style="font-size:20px">New analysis — any area, any date</div>
+    <div class="small muted">Type the area and the flood date. The dashboard checks them, then gives you the exact settings for the HimRaksha notebook, which downloads and processes the raw satellite data.</div>
+    <div class="lbl">Start from</div>
+    <div class="seg" id="presets"></div>
+    <div class="form">
+      <label class="fld">West (longitude)<input id="fW" inputmode="decimal" required></label>
+      <label class="fld">East (longitude)<input id="fE" inputmode="decimal" required></label>
+      <label class="fld">South (latitude)<input id="fS" inputmode="decimal" required></label>
+      <label class="fld">North (latitude)<input id="fN" inputmode="decimal" required></label>
+      <label class="fld">Flood date<input id="fD" type="date" required></label>
+      <label class="fld">OSM snapshot (before the flood)<input id="fO" type="date" required></label>
+    </div>
+    <div id="checks" aria-live="polite"></div>
+    <button class="btn acc" type="submit" style="align-self:flex-start">Check &amp; create run settings</button>
+  </form>
+  <section class="bx card" style="flex:1 1 460px;min-width:0;display:flex;flex-direction:column;gap:10px">
+    <div class="lbl">Run settings for the notebook (cell 1 — CONFIG)</div>
+    <pre class="cfg" id="cfg"># fill the form and press "Check & create run settings"</pre>
+    <div class="seg"><button class="btn" type="button" id="copyCfg">Copy settings</button><span class="small muted" id="copied" aria-live="polite"></span></div>
+    <div class="lbl" style="margin-top:6px">What happens next</div>
+    <div id="steps"></div>
+    <div class="small muted">Times are from our real Trishuli and Chamoli runs on Google Colab (about 1 hour in total). When the run ends, cell 9 exports it here: refresh this page and the new area appears in the event list.</div>
+    <button class="btn" type="button" id="backDash" style="align-self:flex-start">← Back to dashboard</button>
+  </section>
+</section>
+
+<footer class="att">
+  <span id="attYear">Contains modified Copernicus Sentinel data.</span>
+  <span>Produced using Copernicus WorldDEM-30 © DLR e.V. 2010–2014 and © Airbus Defence and Space GmbH 2014–2018 provided under COPERNICUS by the European Union and ESA; all rights reserved.</span>
+  <span>© OpenStreetMap contributors (ODbL).</span>
+  <span>Flood model trained on Kuro Siwo (Bountos et al., 2024).</span>
+  <span>Educational prototype — not an operational tool.</span>
+</footer>
+</div>
+
+<script src="vendor/leaflet/leaflet.js"></script>
+<script src="data/events.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+ohsome API v2 snapshot 2026-07-27T00:00:00Z (event 2026-08-26), bbox [85.1, 27.9, 85.45, 28.32]
+(c) OpenStreetMap contributors

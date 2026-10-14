@@ -1,0 +1,29 @@
+{
+  "osm_snapshot": "2026-07-27",
+  "buildings_total": 82033,
+  "buildings_likely_hit": 2263,
+  "buildings_hit_high_conf": 1887,
+  "road_km_total": 1573.7,
+  "road_km_likely_affected": 43.08,
+  "road_segments_likely_affected": 202,
+  "footpath_segments_likely_affected": 122,
+  "bridges_total": 179,
+  "bridges_likely_damaged": 27,
+  "bridges_likely_damaged_high_conf": 23,
+  "bridges_possibly_damaged": 17,
+  "bridges_likely_damaged_by_use": {
+    "vehicle": 16,
+    "foot": 8,
+    "other": 3
+  },
+  "road_km_affected_by_class": {
+    "unclassified": 21.99,
+    "track": 8.79,
+    "primary": 7.04,
+    "service": 1.93,
+    "residential": 1.37,
+    "tertiary": 0.97,
+    "trunk": 0.75,
+    "secondary": 0.25
+  }
+}

@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "buildings_hit",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "@osmId": "232009081", "building": "yes", "confidence": "high" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 79.6281285, 30.4946964 ], [ 79.6282059, 30.4946603 ], [ 79.6281697, 30.4946026 ], [ 79.6280923, 30.4946386 ], [ 79.6281285, 30.4946964 ] ] ] } }
+]
+}

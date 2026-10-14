@@ -1,0 +1,10 @@
+name,place,km_from_start,exposure,exposed_buildings_500m,min_bldg_height_above_channel_m,dist_to_channel_m,height_above_channel_m,channel_elev_m
+Rasuwa Gadhi,hamlet,0.03,high,7,-0.4,393,64.7,1769.0
+Lingling,hamlet,8.3,medium,6,12.1,332,188.4,1548.0
+Mailung,hamlet,32.77,high,29,-0.0,121,20.4,906.0
+Simle,hamlet,38.95,high,37,1.5,156,54.9,761.0
+Salim Bhitta,hamlet,39.36,high,4,5.9,311,215.4,718.0
+Shanti Bazar,hamlet,41.0,medium,6,17.3,462,125.5,690.0
+Naubisephat,hamlet,44.71,high,66,0.7,213,31.2,620.0
+Betrawati,hamlet,46.2,high,181,2.9,174,32.1,600.0
+Bhainse,hamlet,48.16,high,142,2.6,177,22.0,573.0

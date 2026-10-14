@@ -1,0 +1,292 @@
+{
+  "reference": "Copernicus EMS EMSR927 grading products (photo-interpretation of VHR optical). Used ONLY for validation.",
+  "notes": [
+    "EMS classifies the event as '6-Mass Movement / Landslide' (debris flow), not open water.",
+    "Our map only analyses the valley floor (HAND<50 m, slope<30 deg); 'valley' scores are restricted to that mask.",
+    "Asset matching tolerances: buildings 20 m, roads 30 m, bridges 60 m.",
+    "Bridges: 'bridges' = our LIKELY DAMAGED grade; 'bridges_incl_possibly' adds POSSIBLY DAMAGED (needs ground check).",
+    "AOI04 Bharatpur and AOI05 lie outside our 26 Aug 2026 run area and were not scored."
+  ],
+  "aois": {
+    "AOI01 Syapru Besi": {
+      "aoi_km2_scored": 3.46,
+      "valley_km2": 0.7,
+      "ems_event_km2": 1.111,
+      "ems_event_in_valley_pct": 58.5,
+      "area_all_detections": {
+        "precision": 0.954,
+        "recall": 0.194,
+        "f1": 0.322,
+        "iou": 0.192,
+        "ems_km2": 1.111,
+        "ours_km2": 0.226,
+        "overlap_km2": 0.215
+      },
+      "area_high_confidence": {
+        "precision": 1.0,
+        "recall": 0.027,
+        "f1": 0.052,
+        "iou": 0.027,
+        "ems_km2": 1.111,
+        "ours_km2": 0.03,
+        "overlap_km2": 0.03
+      },
+      "area_water_only_unet": {
+        "precision": 0,
+        "recall": 0.0,
+        "f1": 0,
+        "iou": 0.0,
+        "ems_km2": 1.111,
+        "ours_km2": 0.0,
+        "overlap_km2": 0.0
+      },
+      "area_all_detections_valley_only": {
+        "precision": 0.954,
+        "recall": 0.331,
+        "f1": 0.492,
+        "iou": 0.326,
+        "ems_km2": 0.65,
+        "ours_km2": 0.226,
+        "overlap_km2": 0.215
+      },
+      "buildings": {
+        "ems_damaged_or_destroyed": 355,
+        "ems_possibly_damaged": 78,
+        "ems_damaged_we_flagged": 228,
+        "recall": 0.642,
+        "recall_high_conf_only": 0.386,
+        "ours_flagged": 132,
+        "ours_confirmed_by_ems": 128,
+        "precision": 0.97
+      },
+      "roads": {
+        "ems_damaged_km": 6.15,
+        "ems_damaged_km_we_flagged": 2.84,
+        "recall_by_length": 0.462,
+        "ours_flagged_km": 2.03,
+        "ours_km_confirmed_by_ems": 2.03,
+        "precision_by_length": 1.0
+      },
+      "bridges": {
+        "ems_damaged": 5,
+        "ems_damaged_we_flagged": 2,
+        "ours_flagged": 2,
+        "ours_confirmed_by_ems": 2
+      },
+      "bridges_incl_possibly": {
+        "ems_damaged": 5,
+        "ems_damaged_we_flagged": 4,
+        "ours_flagged": 5,
+        "ours_confirmed_by_ems": 4
+      }
+    },
+    "AOI02 Timure": {
+      "aoi_km2_scored": 2.97,
+      "valley_km2": 0.81,
+      "ems_event_km2": 1.294,
+      "ems_event_in_valley_pct": 61.7,
+      "area_all_detections": {
+        "precision": 0.996,
+        "recall": 0.153,
+        "f1": 0.265,
+        "iou": 0.153,
+        "ems_km2": 1.294,
+        "ours_km2": 0.199,
+        "overlap_km2": 0.198
+      },
+      "area_high_confidence": {
+        "precision": 1.0,
+        "recall": 0.009,
+        "f1": 0.019,
+        "iou": 0.009,
+        "ems_km2": 1.294,
+        "ours_km2": 0.012,
+        "overlap_km2": 0.012
+      },
+      "area_water_only_unet": {
+        "precision": 0,
+        "recall": 0.0,
+        "f1": 0,
+        "iou": 0.0,
+        "ems_km2": 1.294,
+        "ours_km2": 0.0,
+        "overlap_km2": 0.0
+      },
+      "area_all_detections_valley_only": {
+        "precision": 0.996,
+        "recall": 0.248,
+        "f1": 0.397,
+        "iou": 0.248,
+        "ems_km2": 0.798,
+        "ours_km2": 0.199,
+        "overlap_km2": 0.198
+      },
+      "buildings": {
+        "ems_damaged_or_destroyed": 405,
+        "ems_possibly_damaged": 26,
+        "ems_damaged_we_flagged": 296,
+        "recall": 0.731,
+        "recall_high_conf_only": 0.711,
+        "ours_flagged": 214,
+        "ours_confirmed_by_ems": 211,
+        "precision": 0.986
+      },
+      "roads": {
+        "ems_damaged_km": 9.52,
+        "ems_damaged_km_we_flagged": 3.3,
+        "recall_by_length": 0.346,
+        "ours_flagged_km": 2.87,
+        "ours_km_confirmed_by_ems": 2.5,
+        "precision_by_length": 0.871
+      },
+      "bridges": {
+        "ems_damaged": 1,
+        "ems_damaged_we_flagged": 0,
+        "ours_flagged": 0,
+        "ours_confirmed_by_ems": 0
+      },
+      "bridges_incl_possibly": {
+        "ems_damaged": 1,
+        "ems_damaged_we_flagged": 0,
+        "ours_flagged": 4,
+        "ours_confirmed_by_ems": 0
+      }
+    },
+    "AOI03 Bidur": {
+      "aoi_km2_scored": 12.57,
+      "valley_km2": 6.87,
+      "ems_event_km2": 5.085,
+      "ems_event_in_valley_pct": 93.1,
+      "area_all_detections": {
+        "precision": 0.912,
+        "recall": 0.669,
+        "f1": 0.772,
+        "iou": 0.628,
+        "ems_km2": 5.085,
+        "ours_km2": 3.73,
+        "overlap_km2": 3.401
+      },
+      "area_high_confidence": {
+        "precision": 0.955,
+        "recall": 0.32,
+        "f1": 0.479,
+        "iou": 0.315,
+        "ems_km2": 5.085,
+        "ours_km2": 1.703,
+        "overlap_km2": 1.627
+      },
+      "area_water_only_unet": {
+        "precision": 0.992,
+        "recall": 0.064,
+        "f1": 0.12,
+        "iou": 0.064,
+        "ems_km2": 5.085,
+        "ours_km2": 0.326,
+        "overlap_km2": 0.324
+      },
+      "area_all_detections_valley_only": {
+        "precision": 0.912,
+        "recall": 0.719,
+        "f1": 0.804,
+        "iou": 0.672,
+        "ems_km2": 4.732,
+        "ours_km2": 3.73,
+        "overlap_km2": 3.401
+      },
+      "buildings": {
+        "ems_damaged_or_destroyed": 2204,
+        "ems_possibly_damaged": 160,
+        "ems_damaged_we_flagged": 1836,
+        "recall": 0.833,
+        "recall_high_conf_only": 0.828,
+        "ours_flagged": 1488,
+        "ours_confirmed_by_ems": 1378,
+        "precision": 0.926
+      },
+      "roads": {
+        "ems_damaged_km": 31.74,
+        "ems_damaged_km_we_flagged": 25.79,
+        "recall_by_length": 0.813,
+        "ours_flagged_km": 26.04,
+        "ours_km_confirmed_by_ems": 23.92,
+        "precision_by_length": 0.919
+      },
+      "bridges": {
+        "ems_damaged": 22,
+        "ems_damaged_we_flagged": 17,
+        "ours_flagged": 24,
+        "ours_confirmed_by_ems": 19
+      },
+      "bridges_incl_possibly": {
+        "ems_damaged": 22,
+        "ems_damaged_we_flagged": 18,
+        "ours_flagged": 29,
+        "ours_confirmed_by_ems": 20
+      }
+    }
+  },
+  "total_3_aois": {
+    "area_all_detections": {
+      "precision": 0.918,
+      "recall": 0.509,
+      "f1": 0.655,
+      "iou": 0.487,
+      "ems_km2": 7.49,
+      "ours_km2": 4.155
+    },
+    "area_high_confidence": {
+      "precision": 0.956,
+      "recall": 0.223,
+      "f1": 0.361,
+      "iou": 0.221,
+      "ems_km2": 7.49,
+      "ours_km2": 1.745
+    },
+    "area_water_only_unet": {
+      "precision": 0.994,
+      "recall": 0.043,
+      "f1": 0.083,
+      "iou": 0.043,
+      "ems_km2": 7.49,
+      "ours_km2": 0.326
+    },
+    "area_all_detections_valley_only": {
+      "precision": 0.918,
+      "recall": 0.617,
+      "f1": 0.738,
+      "iou": 0.585,
+      "ems_km2": 6.18,
+      "ours_km2": 4.155
+    },
+    "buildings": {
+      "ems_damaged": 2964,
+      "we_flagged": 2360,
+      "recall": 0.796,
+      "ours_flagged": 1834,
+      "ours_confirmed": 1717,
+      "precision": 0.936
+    },
+    "roads": {
+      "ems_damaged_km": 47.41,
+      "recall": 0.673,
+      "ours_km": 30.94,
+      "precision": 0.92
+    },
+    "bridges": {
+      "ems_damaged": 28,
+      "we_flagged": 19,
+      "ours_flagged": 26,
+      "ours_confirmed": 21,
+      "precision": 0.808,
+      "recall": 0.679
+    },
+    "bridges_incl_possibly": {
+      "ems_damaged": 28,
+      "we_flagged": 22,
+      "ours_flagged": 38,
+      "ours_confirmed": 24,
+      "precision": 0.632,
+      "recall": 0.786
+    }
+  }
+}
