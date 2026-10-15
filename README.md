@@ -13,7 +13,7 @@ Rehearsal on a second unseen Himalayan event: the 7 February 2021 Chamoli debris
 
 | | |
 |---|---|
-| **Demo video** | [Watch on Google Drive](https://drive.google.com/file/d/1PaJrX4UZVGP9plKon9hde6lwzckDmmWi/view?usp=sharing) |
+| **Demo video** | [Watch on Google Drive](https://drive.google.com/file/d/1BqEFGB1mRaOHyHY_-3M6huZH5Qxuvq5D/view?usp=sharing) |
 | **Run it** | [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md): accounts, every notebook cell, timings, troubleshooting |
 | **Report** (6 pages) | [`docs/report/HimRaksha_report.pdf`](docs/report/HimRaksha_report.pdf) |
 | **The model** | [`model/README.md`](model/README.md): model card, scores, how to load it |
