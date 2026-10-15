@@ -13,85 +13,118 @@
 <div class="wrap">
 
 <header class="top bx">
+  <button class="burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="drawer"><i></i><i></i><i></i></button>
   <div class="brand">
-    <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 33 L14 13 L20 22 L26 9 L37 33 Z" fill="#7C3AED" stroke="#1B1530" stroke-width="2.5" stroke-linejoin="round"/><path d="M3 33 Q12 28 20 33 T37 33" fill="none" stroke="#1D4FC4" stroke-width="3"/></svg>
+    <svg width="46" height="46" viewBox="0 0 40 40" aria-hidden="true"><path d="M3 33 L14 13 L20 22 L26 9 L37 33 Z" fill="#7C3AED" stroke="#1B1530" stroke-width="2.5" stroke-linejoin="round"/><path d="M3 33 Q12 28 20 33 T37 33" fill="none" stroke="#1D4FC4" stroke-width="3"/></svg>
     <div>
       <div class="name h">Him<span>Raksha</span></div>
-      <div class="small muted">Where it flooded · what was damaged · who is cut off — from raw satellite data</div>
+      <div class="small muted tagline">Where it flooded · what was damaged · who is cut off</div>
     </div>
   </div>
   <nav class="seg" id="events" aria-label="Choose event"></nav>
-  <div class="seg">
-    <button class="btn" id="btnNew" type="button">+ New analysis</button>
-    <a class="btn acc" id="btnSitrep" href="sitrep.html" target="_blank" rel="noopener">Situation report ↗</a>
+  <div class="search">
+    <input id="search" type="search" list="placeList" placeholder="Search a village…" aria-label="Search a village" autocomplete="off">
+    <datalist id="placeList"></datalist>
   </div>
+  <div class="sp"></div>
+  <button class="btn crit" id="btnCrit" type="button" aria-pressed="false">⚠ <span id="critN">0</span> critical areas</button>
+  <a class="btn acc" id="btnSitrep" href="sitrep.html" target="_blank" rel="noopener">Situation report ↗</a>
 </header>
 
-<!-- ======================= DASHBOARD VIEW ======================= -->
-<section class="view show" id="viewDash" style="flex-direction:column;gap:14px">
+<!-- ======================= DRAWER (☰) ======================= -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer bx" id="drawer" aria-label="Menu" aria-hidden="true">
+  <div class="dnav">
+    <button class="nav" type="button" data-page="map">🗺 Map</button>
+    <button class="nav" type="button" data-page="ana">📊 Analysis</button>
+  </div>
+  <div class="lbl" style="margin-top:12px">Event</div>
+  <div class="h" style="font-size:16px;margin-top:2px" id="evName">—</div>
+  <div class="small muted" id="evKind"></div>
+  <div class="mono small muted" id="evBox" style="margin-top:2px"></div>
+  <div class="lbl" style="margin:12px 0 2px">Map layers</div>
+  <div id="layers"></div>
+  <div class="lbl" style="margin:12px 0 6px">Confidence</div>
+  <div class="seg" role="group" aria-label="Confidence filter">
+    <button class="btn on" id="confAll" type="button" aria-pressed="true">All detections</button>
+    <button class="btn" id="confHi" type="button" aria-pressed="false">Confident only</button>
+  </div>
+  <div class="small muted" style="margin-top:6px">Confident = both radar orbits agree, or radar and Sentinel-2 agree. Numbers, map and cut-off status all switch together.</div>
+  <div class="lbl" style="margin:12px 0 2px">Satellite data used</div>
+  <div id="timeline"></div>
+  <div class="small muted" style="margin-top:4px">Inputs: Sentinel-1/2, Copernicus DEM, pre-event OpenStreetMap. EMS is never an input.</div>
+  <div class="lbl" style="margin:12px 0 6px">More</div>
+  <div class="seg">
+    <a class="btn" id="btnSitrep2" href="sitrep.html" target="_blank" rel="noopener">📄 Situation report</a>
+    <button class="btn" id="btnNew" type="button">➕ New analysis</button>
+  </div>
+</aside>
+
+<!-- ======================= MAP PAGE ======================= -->
+<section class="view show" id="viewMap">
+  <aside class="quick bx" id="quick" aria-label="Quick lists">
+    <div class="qtabs" role="tablist">
+      <button class="qtab" type="button" data-q="cut" aria-selected="true">Cut off</button>
+      <button class="qtab" type="button" data-q="rep" aria-selected="false">Repairs</button>
+      <button class="qtab" type="button" data-q="br" aria-selected="false">Bridges</button>
+    </div>
+    <div class="qhint small muted" id="qHint"></div>
+    <div class="qlist" id="qList"></div>
+    <button class="btn qmore" type="button" id="qMore">Full tables in Analysis →</button>
+  </aside>
+  <div class="mapbox bx">
+    <div id="map" role="region" aria-label="Impact map"></div>
+    <div class="bm" role="group" aria-label="Base map">
+      <button type="button" data-base="map" aria-pressed="true">Map</button>
+      <button type="button" data-base="sat" aria-pressed="false">Satellite</button>
+      <button type="button" data-base="terrain" aria-pressed="false">Terrain</button>
+    </div>
+    <div class="maptitle" id="mapTitle"></div>
+    <div class="maptools">
+      <button type="button" id="zIn" aria-label="Zoom in" title="Zoom in">+</button>
+      <button type="button" id="zOut" aria-label="Zoom out" title="Zoom out">−</button>
+      <button type="button" id="zFit" aria-label="Show whole area" title="Show whole area" style="font-size:13px">⤢</button>
+      <button type="button" id="tracePick" aria-label="Trace a flood path from a point" aria-pressed="false" title="Trace flood path" style="font-size:18px">⤵</button>
+    </div>
+    <div class="hint" id="traceHint">Click any point upstream to trace the flood path · Esc to cancel</div>
+    <div class="tour" id="tour" aria-live="polite"></div>
+    <div class="mapfoot">
+      <button class="btn legbtn" id="legBtn" type="button" aria-expanded="false" aria-controls="legend">☰ Legend</button>
+      <div class="scale" id="scale"><b></b><span></span></div>
+    </div>
+    <div class="legend bx" id="legend" aria-label="Legend">
+      <div class="lgh"><span class="lbl">Legend</span><button type="button" id="legClose" aria-label="Close legend">×</button></div>
+      <div class="lg">
+        <div><span class="sw" style="background:var(--debris-hi)"></span>Debris — high confidence</div>
+        <div><span class="sw" style="background:var(--debris-lo)"></span>Debris — low confidence</div>
+        <div><span class="sw" style="background:var(--water-hi)"></span>New water</div>
+        <div><span class="sw" style="background:var(--optical)"></span>Seen only by Sentinel-2</div>
+        <div><span class="sw" style="background:transparent;border:3px solid #FFD400"></span>Yellow glow = damage outline</div>
+        <div><span class="ln" style="background:var(--road-hit)"></span>Road affected</div>
+        <div><span class="ln" style="background:#E8C96A"></span>Main road (not affected)</div>
+        <div><span class="mk-l m-cut"><i></i></span>Village cut off</div>
+        <div><span class="mk-l m-detour"><i></i></span>Village with long detour</div>
+        <div><span class="mk-l m-ok"><i></i></span>Village reachable</div>
+        <div><span class="mk-l m-na"><i></i></span>No mapped road nearby</div>
+        <div><span class="mk-l m-hl"><i></i></span>Health facility</div>
+        <div><span class="mk-l m-bl"><i></i></span>Bridge likely damaged</div>
+        <div><span class="mk-l m-bp"><i></i></span>Bridge possibly damaged</div>
+        <div><span class="mk-l m-rp"><i>1</i></span>Repair priority</div>
+        <div><span class="ln" style="background:repeating-linear-gradient(90deg,#0B6BFF 0 7px,transparent 7px 11px)"></span>Flood path</div>
+        <div><span class="mk-l m-crit"><i></i></span>Critical area</div>
+        <div><span class="sw hatch"></span>Satellite: cloud, no image</div>
+      </div>
+    </div>
+    <div class="selcard bx" id="selcard" aria-live="polite"></div>
+    <button class="qtoggle" type="button" id="qToggle" aria-label="Hide side list" title="Hide / show the side list">◀</button>
+  </div>
+</section>
+
+<!-- ======================= ANALYSIS PAGE ======================= -->
+<section class="view" id="viewAna">
   <section class="kpis" id="kpis" aria-label="Key numbers"></section>
-
-  <div class="main">
-    <aside class="left">
-      <div class="bx card">
-        <div class="lbl">Event</div>
-        <div class="h" style="font-size:19px;margin-top:2px" id="evName">—</div>
-        <div class="small muted" id="evKind"></div>
-        <div class="mono small muted" id="evBox" style="margin-top:4px"></div>
-      </div>
-      <div class="bx card">
-        <div class="lbl" style="margin-bottom:4px">Satellite data used</div>
-        <div id="timeline"></div>
-        <div class="small muted" style="margin-top:6px">Inputs: Sentinel-1/2, Copernicus DEM, pre-event OpenStreetMap. EMS is never an input.</div>
-      </div>
-      <div class="bx" style="padding:10px 6px">
-        <div class="lbl" style="padding:0 8px 4px">Map layers</div>
-        <div id="layers"></div>
-      </div>
-      <div class="bx card">
-        <div class="lbl" style="margin-bottom:6px">Confidence</div>
-        <div class="seg" role="group" aria-label="Confidence filter">
-          <button class="btn on" id="confAll" type="button" aria-pressed="true">All detections</button>
-          <button class="btn" id="confHi" type="button" aria-pressed="false">Confident only</button>
-        </div>
-        <div class="small muted" style="margin-top:8px">Confident = both radar orbits agree, or radar and Sentinel-2 agree. Numbers, map and cut-off status all switch together.</div>
-      </div>
-    </aside>
-
-    <main class="center bx">
-      <div class="maphead">
-        <div class="h" style="font-size:17px" id="mapTitle">Impact map</div>
-        <div class="small muted">Click anything on the map for details · scroll or +/− to zoom · drag to pan</div>
-      </div>
-      <div class="mapbox">
-        <div id="map" role="region" aria-label="Impact map"></div>
-        <div class="bm" role="group" aria-label="Base map">
-          <button type="button" data-base="map" aria-pressed="true">Map</button>
-          <button type="button" data-base="sat" aria-pressed="false">Satellite</button>
-          <button type="button" data-base="terrain" aria-pressed="false">Terrain</button>
-        </div>
-        <div class="maptools">
-          <button type="button" id="zIn" aria-label="Zoom in">+</button>
-          <button type="button" id="zOut" aria-label="Zoom out">−</button>
-          <button type="button" id="zFit" aria-label="Show whole area" style="font-size:12px">⤢</button>
-          <button type="button" id="tracePick" aria-label="Trace a flood path from a point" aria-pressed="false" title="Trace flood path" style="font-size:18px">⤵</button>
-        </div>
-        <div class="hint" id="traceHint">Click any point upstream to trace the flood path</div>
-        <div class="legend" aria-label="Legend">
-          <div><span class="sw" style="background:var(--debris-hi)"></span>Debris — high conf.</div>
-          <div><span class="sw" style="background:var(--debris-lo)"></span>Debris — low conf.</div>
-          <div><span class="sw" style="background:var(--water-hi)"></span>New water</div>
-          <div><span class="sw" style="background:var(--optical)"></span>Optical only (S2)</div>
-          <div><span style="width:18px;height:4px;background:var(--road-hit);display:inline-block"></span>Road affected</div>
-          <div><span style="width:10px;height:10px;background:var(--cut);transform:rotate(45deg);display:inline-block"></span>Cut off</div>
-          <div><span style="width:12px;height:10px;background:var(--detour);clip-path:polygon(50% 0,100% 100%,0 100%);display:inline-block"></span>Long detour</div>
-          <div><span style="width:9px;height:9px;border-radius:50%;border:2px solid var(--ok);display:inline-block"></span>Reachable</div>
-        </div>
-        <div class="bx selcard" id="selcard" aria-live="polite"></div>
-      </div>
-    </main>
-
-    <aside class="right bx">
+  <div class="anagrid">
+    <div class="bx anapanel">
       <div class="tabs" role="tablist" id="tabs">
         <button class="tab" role="tab" data-tab="cut" aria-selected="true">Cut off</button>
         <button class="tab" role="tab" data-tab="rep" aria-selected="false">Repairs</button>
@@ -101,12 +134,16 @@
         <button class="tab" role="tab" data-tab="val" aria-selected="false">Validation</button>
       </div>
       <div class="pane" id="pane" role="tabpanel"></div>
-    </aside>
+    </div>
+    <div class="bx anapanel">
+      <div class="tabs"><span class="tab" aria-selected="true" style="cursor:default">⚠ Critical areas</span></div>
+      <div class="pane" id="critList"></div>
+    </div>
   </div>
 </section>
 
 <!-- ======================= NEW ANALYSIS VIEW ======================= -->
-<section class="view" id="viewNew" style="flex-wrap:wrap;gap:14px;align-items:flex-start">
+<section class="view" id="viewNew" style="flex-wrap:wrap;gap:14px;align-items:flex-start;overflow:auto">
   <form class="bx card" id="newForm" style="flex:1 1 380px;min-width:0;display:flex;flex-direction:column;gap:12px" novalidate>
     <div class="h" style="font-size:20px">New analysis — any area, any date</div>
     <div class="small muted">Type the area and the flood date. The dashboard checks them, then gives you the exact settings for the HimRaksha notebook, which downloads and processes the raw satellite data.</div>
@@ -130,7 +167,7 @@
     <div class="lbl" style="margin-top:6px">What happens next</div>
     <div id="steps"></div>
     <div class="small muted">Times are from our real Trishuli and Chamoli runs on Google Colab (about 1 hour in total). When the run ends, cell 9 exports it here: refresh this page and the new area appears in the event list.</div>
-    <button class="btn" type="button" id="backDash" style="align-self:flex-start">← Back to dashboard</button>
+    <button class="btn" type="button" id="backDash" style="align-self:flex-start">← Back to map</button>
   </section>
 </section>
 

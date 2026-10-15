@@ -124,15 +124,20 @@ Full instructions: [`docs/RUN_GUIDE.md`](docs/RUN_GUIDE.md). In short:
    `python code/dashboard/export_dashboard.py --manifest code/dashboard/web` and refresh the dashboard.
 
 ## Dashboard
-Open `code/dashboard/web/index.html` in any browser. No install, no server.
-- Event switcher (Trishuli 2026, Chamoli 2021 and every run you export) and 6 headline numbers.
-- Map / Satellite (Sentinel-2) / Terrain backgrounds. Every element is clickable: settlements (travel time before →
-  after, on foot, which repair reconnects them), damage areas, roads, bridges (grade, deck %), health facilities, repairs.
-- "All detections / Confident only" switch: numbers, map and cut-off status change together.
-- Tabs: Cut off · Repairs · Bridges · Flood path (click any point upstream; traced live on the DEM) · Evidence
-  (Sentinel-2 before/after) · Validation.
+Open `code/dashboard/web/index.html` in any browser. No install, no server, works offline.
+- **Map page** (for rescuers): full-screen map with a side list of **cut-off villages, repairs and bridges**; one click
+  flies the map there. Map / Satellite / Terrain backgrounds; every element has a tooltip and details; legend and scale bar;
+  village search.
+- **⚠ Critical areas**: picked by fixed rules from the run (cut off with no road and no footpath first, then the most-used
+  damaged bridge, the biggest villages reachable only on foot, the most useful repair). Red rings + a Next ▶ tour.
+- **☰ menu**: Map / Analysis pages, event, map layers (context layers off by default to reduce clutter),
+  "All detections / Confident only" switch (numbers, map and cut-off status change together), satellite data used.
+- **Analysis page**: headline numbers and full tables: Cut off · Repairs · Bridges · Flood path (click any point upstream,
+  traced live on the DEM) · Evidence (Sentinel-2 before/after) · Validation. Only "Show on map" buttons move the map.
 - **Situation report**: one A4 page generated from the run's numbers (print or save as PDF).
 - **New analysis**: type any area and date; the page checks them and writes the notebook settings for you.
+- Satellite view: where no clear Sentinel-2 image exists, the background shows grey hatching (cloud), never a colour that could
+  be mistaken for damage.
 
 ## Data rules
 - **Inputs:** Sentinel-1 and Sentinel-2 and the Copernicus DEM (Copernicus Data Space), OpenStreetMap as it was before

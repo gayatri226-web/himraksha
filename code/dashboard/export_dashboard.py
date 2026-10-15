@@ -8,7 +8,7 @@ bridges_hit.geojson, roads_hit.geojson, impact_polygons.geojson, repairs.csv, da
 access_stats.json, run_log.json, optional s2_before_rgb.png / s2_after_rgb.png) and writes
   <dashboard_dir>/data/<id>/data.js       all layers + numbers + situation-report text (window.HR_DATA)
   <dashboard_dir>/data/<id>/map.jpg       topographic base map (Copernicus DEM: elevation colours, relief, rivers)
-  <dashboard_dir>/data/<id>/sat.jpg       Sentinel-2 true colour BEFORE the event (cloud gaps filled with the map)
+  <dashboard_dir>/data/<id>/sat.jpg       Sentinel-2 true colour BEFORE the event (cloud gaps: after-image, else grey hatching)
   <dashboard_dir>/data/<id>/terrain.jpg   shaded relief
   <dashboard_dir>/data/<id>/ev_*.jpg      Sentinel-2 before / after / detected close-up (if Sentinel-2 was used)
   <dashboard_dir>/data/<id>/meta.json     name / date of the run
@@ -146,9 +146,11 @@ def basemaps(run, grid, out):
             agap = ~np.isfinite(aft[..., 0]) | (np.abs(aft - 217).sum(-1) < 8)
             use = gap & ~agap
             sat[use] = aft[use]; gap = gap & agap
-        dark = np.array([78, 70, 62.]) * (0.6 + 0.9 * hs[..., None])   # what is left is mostly terrain shadow: shade it dark
-        sat = np.where(gap[..., None], dark, sat)
-        sat = np.clip((sat - 10) * 1.12, 0, 255)
+        sat = np.clip((np.nan_to_num(sat, nan=200) - 10) * 1.12, 0, 255)
+        yy, xx = np.mgrid[0:sat.shape[0], 0:sat.shape[1]]      # no clear image on either date: light grey hatching
+        stripe = ((xx + yy) // 6) % 2 == 0                      # (never brown, so it cannot be mistaken for debris)
+        hatch = np.where(stripe[..., None], np.array([214, 214, 220.]), np.array([196, 196, 204.]))
+        sat = np.where(gap[..., None], hatch, sat)
         sat[river >= 3] = sat[river >= 3] * 0.4 + blue * 0.6
         Image.fromarray(sat.astype(np.uint8)).save(f"{out}/sat.jpg", quality=82)
         sat_ok = True
